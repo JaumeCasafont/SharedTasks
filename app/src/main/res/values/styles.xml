@@ -8,4 +8,49 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CardTitle" parent="android:TextAppearance">
+        <item name="android:textSize">21dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textCard</item>
+    </style>
+
+    <style name="CardButton" parent="android:TextAppearance">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CardButtonSmall" parent="android:TextAppearance">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CardDescription" parent="android:TextAppearance">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/textCard</item>
+    </style>
+
+    <style name="assignMe" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="date" parent="android:TextAppearance">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="tabText" parent="android:TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="tagText" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="addItemText" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textCard</item>
+    </style>
 </resources>

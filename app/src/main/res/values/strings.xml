@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SharedTasks</string>
+
+    <string name="assign_task">Assign me</string>
+    <string name="open_drawer_description">List of all your projects</string>
+    <string name="close_drawer_description">Tasks of selected project</string>
+    <string name="drawer_opened_title">Select a project</string>
 </resources>
