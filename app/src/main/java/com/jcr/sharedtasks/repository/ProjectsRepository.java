@@ -8,8 +8,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jcr.sharedtasks.AppExecutors;
-import com.jcr.sharedtasks.db.SharedTasksDb;
 import com.jcr.sharedtasks.db.ProjectsDao;
+import com.jcr.sharedtasks.db.SharedTasksDb;
 import com.jcr.sharedtasks.model.Project;
 import com.jcr.sharedtasks.model.ProjectReference;
 import com.jcr.sharedtasks.util.FirebaseQueryLiveData;
@@ -91,10 +91,25 @@ public class ProjectsRepository {
     private List<ProjectReference> deserializeProjectReference(DataSnapshot dataSnapshot) {
         ProjectReference projectReference = dataSnapshot.getValue(ProjectReference.class);
         if (projectReference != null) {
-            projectReferencesCache.add(projectReference);
+            int position = projectReferencePosition(projectReference);
+            if (position == -1) {
+                projectReferencesCache.add(projectReference);
+            } else {
+                projectReferencesCache.set(position, projectReference);
+            }
         }
 
         return projectReferencesCache;
+    }
+
+    private int projectReferencePosition(ProjectReference projectReference) {
+        if (projectReferencesCache.size() == 0) return -1;
+        for (int i = 0; i < projectReferencesCache.size(); i++) {
+            if (projectReferencesCache.get(i).getProjectUUID().equals(projectReference.getProjectUUID())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private Project deserializeProject(DataSnapshot dataSnapshot) {
