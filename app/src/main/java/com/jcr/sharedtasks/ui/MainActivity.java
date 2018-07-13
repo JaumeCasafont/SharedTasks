@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         SharedPreferences sharedPreferences = getSharedPreferences("com.jcr.sharedtasks", Context.MODE_PRIVATE);
         if (sharedPreferences.contains("lastLoadedProject") && savedInstanceState == null) {
             navigationController.navigateToTasksList(sharedPreferences.getString("lastLoadedProject", ""));
+        } else {
+            findViewById(R.id.welcome_text).setVisibility(View.VISIBLE);
         }
     }
 

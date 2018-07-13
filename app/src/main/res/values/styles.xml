@@ -26,9 +26,12 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
-    <style name="CardDescription" parent="android:TextAppearance">
+    <style name="TextMediumBlack" parent="android:TextAppearance">
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/textCard</item>
+    </style>
+
+    <style name="CardDescription" parent="TextMediumBlack">
     </style>
 
     <style name="assignMe" parent="android:TextAppearance">
