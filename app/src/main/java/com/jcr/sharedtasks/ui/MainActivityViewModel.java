@@ -51,11 +51,13 @@ public class MainActivityViewModel extends ViewModel {
         return projectsReferences;
     }
 
-//    public void createProject() {
-//        String projectUUID = UUID.randomUUID().toString();
-//        List<Task> tasks = new ArrayList<>();
-//
-//        tasks.add(new Task("TaskUUID"));
-//        projectsRepository.createProject(projectUUID, new Project(projectUUID, "Super Project", tasks));
-//    }
+    public void createProject() {
+        String projectUUID = UUID.randomUUID().toString();
+        List<Task> tasks = new ArrayList<>();
+
+        Task newTask = new Task("TaskUUID", "date", "title", true, "assignee", "description", 0, true);
+        newTask.setTaskProjectUUID(projectUUID);
+        tasks.add(newTask);
+        projectsRepository.createProject(projectUUID, new Project(projectUUID, "Project V2", tasks));
+    }
 }

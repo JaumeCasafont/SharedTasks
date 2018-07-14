@@ -6,9 +6,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.jcr.sharedtasks.model.Project;
 import com.jcr.sharedtasks.model.ProjectReference;
-import com.jcr.sharedtasks.repository.ProjectsRepository;
+import com.jcr.sharedtasks.model.Task;
 
 import java.util.List;
 
@@ -16,15 +15,22 @@ import java.util.List;
 public abstract class ProjectsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertProject(Project project);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertProjectsReferences(List<ProjectReference> projectReferences);
 
-    @Query("SELECT * FROM Project "
-            + "WHERE projectUUID = :projectUUID ")
-    public abstract LiveData<Project> loadProject(String projectUUID);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertTasks(List<Task> tasks);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertTask(Task task);
 
     @Query("SELECT * FROM ProjectReference")
     public abstract LiveData<List<ProjectReference>> loadProjectsReferences();
+
+    @Query("SELECT * FROM ProjectReference "
+            + "WHERE projectUUID = :projectUUID")
+    public abstract LiveData<ProjectReference> loadProjectReferenceById(String projectUUID);
+
+    @Query("SELECT * FROM task "
+            + "WHERE taskProjectUUID = :projectUUID ")
+    public abstract LiveData<List<Task>> loadTasks(String projectUUID);
 }

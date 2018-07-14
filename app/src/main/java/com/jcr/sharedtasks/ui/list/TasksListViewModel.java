@@ -6,9 +6,12 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.VisibleForTesting;
 
-import com.jcr.sharedtasks.model.Project;
+import com.jcr.sharedtasks.model.ProjectReference;
+import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,18 +19,25 @@ public class TasksListViewModel extends ViewModel {
 
     @VisibleForTesting
     final MutableLiveData<String> projectUUID;
-    private final LiveData<Project> project;
+    private final LiveData<List<Task>> tasks;
     private final ProjectsRepository repository;
+    private final LiveData<ProjectReference> projectReference;
 
     @Inject
     public TasksListViewModel(ProjectsRepository repository) {
         this.projectUUID = new MutableLiveData<>();
         this.repository = repository;
-        project = Transformations.switchMap(projectUUID, input -> {
+        tasks = Transformations.switchMap(projectUUID, input -> {
             if (input.isEmpty()) {
                 return AbsentLiveData.create();
             }
-            return repository.loadProject(input);
+            return repository.loadTasks(input);
+        });
+        projectReference = Transformations.switchMap(projectUUID, input -> {
+            if (input.isEmpty()) {
+                return AbsentLiveData.create();
+            }
+            return repository.getProjectReferenceById(input);
         });
     }
 
@@ -35,7 +45,19 @@ public class TasksListViewModel extends ViewModel {
         this.projectUUID.setValue(projectUUID);
     }
 
-    public LiveData<Project> getProject() {
-        return project;
+    public LiveData<List<Task>> getTasks() {
+        return tasks;
+    }
+
+    public LiveData<ProjectReference> getProjectReference() {
+        return projectReference;
+    }
+
+    public void updateTaskStatus(Task task) {
+        this.repository.updateTaskStatus(task);
+    }
+
+    public void updateTaskAssignee(Task task) {
+        this.repository.updateTaskAssignee(task);
     }
 }

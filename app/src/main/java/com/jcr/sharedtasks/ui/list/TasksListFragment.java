@@ -66,11 +66,15 @@ public class TasksListFragment extends Fragment implements Injectable {
         tasksListViewModel = ViewModelProviders.of(this, viewModelFactory).get(TasksListViewModel.class);
         TasksListAdapter tasksListAdapter = new TasksListAdapter(dataBindingComponent, task -> {
             //TODO
-        });
+        }, tasksListViewModel::updateTaskStatus, tasksListViewModel::updateTaskAssignee);
         Bundle args = getArguments();
         if (args.containsKey(PROJECT_UUID_KEY)) {
             tasksListViewModel.setProjectUUID(args.getString(PROJECT_UUID_KEY));
         }
+
+        tasksListViewModel.getProjectReference().observe(this,
+                projectReference -> ((AppCompatActivity)getActivity()).getSupportActionBar()
+                        .setTitle(projectReference.getProjectName()));
 
         binding.get().tasksListRv.setAdapter(tasksListAdapter);
         adapter = new AutoClearedValue<>(this, tasksListAdapter);
@@ -79,11 +83,11 @@ public class TasksListFragment extends Fragment implements Injectable {
     }
 
     private void initRecyclerView() {
-        tasksListViewModel.getProject().observe(this, project -> {
-            if (project != null) {
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(project.getName());
-                binding.get().setVariable(projectTasksList, project.getTasks());
-                adapter.get().replace(project.getTasks());
+        tasksListViewModel.getTasks().observe(this, tasks -> {
+            if (tasks != null) {
+//
+                binding.get().setVariable(projectTasksList, tasks);
+                adapter.get().replace(tasks);
                 binding.get().executePendingBindings();
             }
         });

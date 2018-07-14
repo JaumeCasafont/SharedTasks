@@ -1,16 +1,11 @@
 package com.jcr.sharedtasks.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.List;
 
-@Entity
 public class Project {
-    @PrimaryKey
-    @NonNull
+
     private String projectUUID;
     private List<Task> tasks;
     private String name;
@@ -21,7 +16,6 @@ public class Project {
         this.name = name;
     }
 
-    @Ignore
     public Project() {
     }
 

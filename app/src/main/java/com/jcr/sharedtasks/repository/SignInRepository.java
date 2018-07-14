@@ -30,5 +30,6 @@ public class SignInRepository {
 
     public void onSignedInitialize(FirebaseUser user) {
         sharedPreferences.edit().putString("userUid", user.getUid()).apply();
+        sharedPreferences.edit().putString("userName", user.getDisplayName()).apply();
     }
 }

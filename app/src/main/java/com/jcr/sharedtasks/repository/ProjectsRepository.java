@@ -12,6 +12,8 @@ import com.jcr.sharedtasks.db.ProjectsDao;
 import com.jcr.sharedtasks.db.SharedTasksDb;
 import com.jcr.sharedtasks.model.Project;
 import com.jcr.sharedtasks.model.ProjectReference;
+import com.jcr.sharedtasks.model.Task;
+import com.jcr.sharedtasks.util.FirebaseChildQueryLiveData;
 import com.jcr.sharedtasks.util.FirebaseQueryLiveData;
 
 import java.util.ArrayList;
@@ -42,8 +44,7 @@ public class ProjectsRepository {
     }
 
     public void createProject(String projectUUID, Project project) {
-        appExecutors.diskIO().execute(() -> projectsDao.insertProject(project));
-        dataRef.child(projectUUID).push().setValue(project);
+        dataRef.child(projectUUID).setValue(project);
 
         String userUid = sharedPreferences.getString("userUid", "");
         ProjectReference projectReference = new ProjectReference(projectUUID, project.getName());
@@ -54,7 +55,7 @@ public class ProjectsRepository {
         String userUid = sharedPreferences.getString("userUid", "");
         MediatorLiveData<List<ProjectReference>> result = new MediatorLiveData<>();
         LiveData<List<ProjectReference>> dbSource = projectsDao.loadProjectsReferences();
-        FirebaseQueryLiveData networkSource = new FirebaseQueryLiveData(dataRef.child(userUid));
+        FirebaseChildQueryLiveData networkSource = new FirebaseChildQueryLiveData(dataRef.child(userUid));
 
         result.addSource(dbSource, result::setValue);
 
@@ -69,28 +70,60 @@ public class ProjectsRepository {
         return result;
     }
 
-    public LiveData<Project> loadProject(String projectUUID) {
+    public LiveData<ProjectReference> getProjectReferenceById(String projectUUID) {
+        return projectsDao.loadProjectReferenceById(projectUUID);
+    }
+
+    public LiveData<List<Task>> loadTasks(String projectUUID) {
         sharedPreferences.edit().putString("lastLoadedProject", projectUUID).apply();
-        MediatorLiveData<Project> result = new MediatorLiveData<>();
-        LiveData<Project> dbSource = projectsDao.loadProject(projectUUID);
+        MediatorLiveData<List<Task>> result = new MediatorLiveData<>();
+        LiveData<List<Task>> dbSource = projectsDao.loadTasks(projectUUID);
         FirebaseQueryLiveData networkSource = new FirebaseQueryLiveData(dataRef.child(projectUUID));
 
         result.addSource(dbSource, result::setValue);
 
         result.addSource(networkSource, dataSnapshot -> {
-            Project project = deserializeProject(dataSnapshot);
-            if (project != null) {
-                result.setValue(project);
-                appExecutors.diskIO().execute(() -> projectsDao.insertProject(project));
+            List<Task> tasks = deserializeProjectTasks(dataSnapshot);
+            if (tasks != null) {
+                result.setValue(tasks);
+                appExecutors.diskIO().execute(() -> {
+                    projectsDao.insertTasks(tasks);
+                });
             }
         });
 
         return result;
     }
 
+    public void updateTaskStatus(Task task) {
+        Task updatedStatusTask = new Task(task);
+        updatedStatusTask.setState(updatedStatusTask.getState() + 1);
+        if (updatedStatusTask.getState() <= 2) {
+            saveTask(updatedStatusTask);
+            uploadTask(updatedStatusTask);
+        }
+    }
+
+    public void updateTaskAssignee(Task task) {
+        Task updatedAssigneeTask = new Task(task);
+        updatedAssigneeTask.setAssigned(true);
+        updatedAssigneeTask.setAssignee(sharedPreferences.getString("userName", " "));
+        saveTask(updatedAssigneeTask);
+        uploadTask(updatedAssigneeTask);
+    }
+
+    private void saveTask(Task task) {
+        appExecutors.diskIO().execute(() -> projectsDao.insertTask(task));
+    }
+
+    private void uploadTask(Task task) {
+        dataRef.child(task.getTaskProjectUUID() + "/tasks/" + String.valueOf(task.getRemotePosition()))
+                .setValue(task);
+    }
+
     private List<ProjectReference> deserializeProjectReference(DataSnapshot dataSnapshot) {
         ProjectReference projectReference = dataSnapshot.getValue(ProjectReference.class);
-        if (projectReference != null) {
+        if (projectReference != null && projectReference.getProjectUUID() != null) {
             int position = projectReferencePosition(projectReference);
             if (position == -1) {
                 projectReferencesCache.add(projectReference);
@@ -112,7 +145,15 @@ public class ProjectsRepository {
         return -1;
     }
 
-    private Project deserializeProject(DataSnapshot dataSnapshot) {
-        return dataSnapshot.getValue(Project.class);
+    private List<Task> deserializeProjectTasks(DataSnapshot dataSnapshot) {
+        Project project = dataSnapshot.getValue(Project.class);
+        addRemotePositions(project);
+        return project.getTasks();
+    }
+
+    private void addRemotePositions(Project project) {
+        for (int i = 0; i < project.getTasks().size(); i++) {
+            project.getTasks().get(i).setRemotePosition(i);
+        }
     }
 }

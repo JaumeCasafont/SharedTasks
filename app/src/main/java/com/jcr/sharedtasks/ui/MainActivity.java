@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             projectReferences = result;
             fillDrawer();
         });
+        //mViewModel.createProject();
     }
 
     private void fillDrawer() {
