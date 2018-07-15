@@ -27,7 +27,7 @@ public class Task {
     public boolean hasPriority;
     public int remotePosition;
 
-    public Task(String taskSID, long date, String title, String assignee, String description, int state, boolean hasPriority) {
+    public Task(String taskSID, long date, String title, String assignee, String description, int state, boolean hasPriority, int remotePosition) {
         this.taskSID = taskSID;
         this.date = date;
         this.title = title;
@@ -35,10 +35,16 @@ public class Task {
         this.description = description;
         this.state = state;
         this.hasPriority = hasPriority;
+        this.remotePosition = remotePosition;
     }
 
     @Ignore
     public Task() {
+    }
+
+    @Ignore
+    public Task(String taskSID) {
+        this.taskSID = taskSID;
     }
 
     @Ignore
@@ -51,6 +57,7 @@ public class Task {
         this.description = task.getDescription();
         this.state = task.getState();
         this.hasPriority = task.hasPriority();
+        this.remotePosition = task.getRemotePosition();
     }
 
     @NonNull

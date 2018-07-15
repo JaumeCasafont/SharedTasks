@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.jcr.sharedtasks.R;
 import com.jcr.sharedtasks.binding.FragmentDataBindingComponent;
@@ -98,8 +99,9 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_task:
-                onSaveClick();
-                getActivity().onBackPressed();
+                if (onSaveClick()) {
+                    getActivity().onBackPressed();
+                }
                 return true;
 
             default:
@@ -130,11 +132,16 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
         binding.get().taskDueDate.setOnClickListener(v -> onDateClick());
     }
 
-    private void onSaveClick() {
-        taskDetailViewModel.saveTask(
-                binding.get().taskTitleEt.getText().toString(),
-                binding.get().taskDescriptionEt.getText().toString()
-        );
+    private boolean onSaveClick() {
+        String title =  binding.get().taskTitleEt.getText().toString();
+        if (!title.isEmpty()) {
+            taskDetailViewModel.saveTask(
+                    title, binding.get().taskDescriptionEt.getText().toString());
+            return true;
+        } else {
+            Toast.makeText(getContext(), getString(R.string.task_title_empty_error), Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
     public void onAssigneeClick() {

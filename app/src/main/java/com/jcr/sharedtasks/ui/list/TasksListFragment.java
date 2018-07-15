@@ -85,6 +85,7 @@ public class TasksListFragment extends Fragment implements Injectable {
                 projectReference -> ((AppCompatActivity)getActivity()).getSupportActionBar()
                         .setTitle(projectReference.getProjectName()));
 
+        binding.get().addTask.setOnClickListener(v -> onNewTaskClick());
         initRecyclerView();
     }
 
@@ -96,6 +97,10 @@ public class TasksListFragment extends Fragment implements Injectable {
                 binding.get().executePendingBindings();
             }
         });
+    }
+
+    public void onNewTaskClick() {
+        navigationController.navigateToTaskDetail(null);
     }
 
     public static TasksListFragment create(String projectUUID) {

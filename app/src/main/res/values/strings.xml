@@ -14,4 +14,5 @@
     <string name="task_high_priority">High priority</string>
     <string name="task_no_priority">No priority</string>
     <string name="task_date_empty">Select a date...</string>
+    <string name="task_title_empty_error">Title can\'t be empty!</string>
 </resources>

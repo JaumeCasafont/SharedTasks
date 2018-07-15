@@ -31,6 +31,8 @@ public class ProjectsRepository {
     private final SharedPreferences sharedPreferences;
 
     private List<ProjectReference> projectReferencesCache;
+    private String currentProjectUUID;
+    private int lastRemotePosition;
 
     @Inject
     public ProjectsRepository(AppExecutors appExecutors, SharedTasksDb db, ProjectsDao projectsDao,
@@ -75,6 +77,7 @@ public class ProjectsRepository {
     }
 
     public LiveData<List<Task>> loadTasks(String projectUUID) {
+        currentProjectUUID = projectUUID;
         sharedPreferences.edit().putString("lastLoadedProject", projectUUID).apply();
         MediatorLiveData<List<Task>> result = new MediatorLiveData<>();
         LiveData<List<Task>> dbSource = projectsDao.loadTasks(projectUUID);
@@ -112,6 +115,10 @@ public class ProjectsRepository {
     }
 
     public void sendTask(Task task) {
+        if (task.getTaskProjectUUID() == null) {
+            task.setTaskProjectUUID(currentProjectUUID);
+            task.setRemotePosition(lastRemotePosition + 1);
+        }
         saveTask(task);
         uploadTask(task);
     }
@@ -158,6 +165,7 @@ public class ProjectsRepository {
     private void addRemotePositions(Project project) {
         for (int i = 0; i < project.getTasks().size(); i++) {
             project.getTasks().get(i).setRemotePosition(i);
+            lastRemotePosition = i;
         }
     }
 }

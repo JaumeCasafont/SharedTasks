@@ -12,6 +12,8 @@ import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
 import com.jcr.sharedtasks.util.TimeUtils;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 public class TaskDetailViewModel extends ViewModel {
@@ -41,7 +43,7 @@ public class TaskDetailViewModel extends ViewModel {
     public void setTaskSID(String taskSID) {
         if (taskSID == null) {
             isNewTask = true;
-            taskToUpload = new Task();
+            taskToUpload = new Task(UUID.randomUUID().toString());
         } else {
             this.taskSID.setValue(taskSID);
         }
@@ -84,19 +86,6 @@ public class TaskDetailViewModel extends ViewModel {
     public void updateDate(long date) {
         dateInMillis = date;
     }
-
-//    public void saveTask(String title, String description, String assignee) {
-//        Task currentTask = task.getValue();
-//        Task taskToUpload = new Task();
-//        if (currentTask != null) {
-//            taskToUpload = new Task(currentTask);
-//            taskToUpload.setTitle(title);
-//            taskToUpload.setDescription(description);
-//            taskToUpload.setAssignee(assignee);
-////            taskToUpload.setHasPriority(hasPriority);
-//        }
-//        repository.sendTask(taskToUpload);
-//    }
 
     public void saveTask(String title, String description) {
         taskToUpload.setTitle(title);
