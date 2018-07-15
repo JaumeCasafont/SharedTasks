@@ -53,9 +53,10 @@ public class MainActivityViewModel extends ViewModel {
 
     public void createProject() {
         String projectUUID = UUID.randomUUID().toString();
+        String taskSID = UUID.randomUUID().toString();
         List<Task> tasks = new ArrayList<>();
 
-        Task newTask = new Task("TaskUUID", "date", "title", true, "assignee", "description", 0, true);
+        Task newTask = new Task(taskSID, 0, "title", "assignee", "description", 0, true);
         newTask.setTaskProjectUUID(projectUUID);
         tasks.add(newTask);
         projectsRepository.createProject(projectUUID, new Project(projectUUID, "Project V2", tasks));

@@ -86,30 +86,34 @@ public class ProjectsRepository {
             List<Task> tasks = deserializeProjectTasks(dataSnapshot);
             if (tasks != null) {
                 result.setValue(tasks);
-                appExecutors.diskIO().execute(() -> {
-                    projectsDao.insertTasks(tasks);
-                });
+                appExecutors.diskIO().execute(() -> projectsDao.insertTasks(tasks));
             }
         });
 
         return result;
     }
 
+    public LiveData<Task> loadTask(String taskSID) {
+        return projectsDao.loadTask(taskSID);
+    }
+
     public void updateTaskStatus(Task task) {
         Task updatedStatusTask = new Task(task);
         updatedStatusTask.setState(updatedStatusTask.getState() + 1);
         if (updatedStatusTask.getState() <= 2) {
-            saveTask(updatedStatusTask);
-            uploadTask(updatedStatusTask);
+            sendTask(updatedStatusTask);
         }
     }
 
     public void updateTaskAssignee(Task task) {
         Task updatedAssigneeTask = new Task(task);
-        updatedAssigneeTask.setAssigned(true);
         updatedAssigneeTask.setAssignee(sharedPreferences.getString("userName", " "));
-        saveTask(updatedAssigneeTask);
-        uploadTask(updatedAssigneeTask);
+        sendTask(updatedAssigneeTask);
+    }
+
+    public void sendTask(Task task) {
+        saveTask(task);
+        uploadTask(task);
     }
 
     private void saveTask(Task task) {

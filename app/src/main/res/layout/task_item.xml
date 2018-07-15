@@ -39,7 +39,7 @@
                 android:id="@+id/text_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{task.date}"
+                app:dateInList="@{task.date}"
                 style="@style/date"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
@@ -62,6 +62,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="10dp"
                 android:text="@{task.assignee == null ? @string/assign_task : task.assignee}"
+                style="@style/assignMe"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

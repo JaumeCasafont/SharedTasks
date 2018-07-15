@@ -64,20 +64,26 @@ public class TasksListFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         tasksListViewModel = ViewModelProviders.of(this, viewModelFactory).get(TasksListViewModel.class);
-        TasksListAdapter tasksListAdapter = new TasksListAdapter(dataBindingComponent, task -> {
-            //TODO
-        }, tasksListViewModel::updateTaskStatus, tasksListViewModel::updateTaskAssignee);
+        TasksListAdapter tasksListAdapter = new TasksListAdapter(dataBindingComponent,
+                task -> navigationController.navigateToTaskDetail(task.getTaskSID()),
+                tasksListViewModel::updateTaskStatus,
+                tasksListViewModel::updateTaskAssignee);
+
         Bundle args = getArguments();
         if (args.containsKey(PROJECT_UUID_KEY)) {
             tasksListViewModel.setProjectUUID(args.getString(PROJECT_UUID_KEY));
         }
 
+        binding.get().tasksListRv.setAdapter(tasksListAdapter);
+        adapter = new AutoClearedValue<>(this, tasksListAdapter);
+
+        fillViews();
+    }
+
+    private void fillViews() {
         tasksListViewModel.getProjectReference().observe(this,
                 projectReference -> ((AppCompatActivity)getActivity()).getSupportActionBar()
                         .setTitle(projectReference.getProjectName()));
-
-        binding.get().tasksListRv.setAdapter(tasksListAdapter);
-        adapter = new AutoClearedValue<>(this, tasksListAdapter);
 
         initRecyclerView();
     }
@@ -85,7 +91,6 @@ public class TasksListFragment extends Fragment implements Injectable {
     private void initRecyclerView() {
         tasksListViewModel.getTasks().observe(this, tasks -> {
             if (tasks != null) {
-//
                 binding.get().setVariable(projectTasksList, tasks);
                 adapter.get().replace(tasks);
                 binding.get().executePendingBindings();

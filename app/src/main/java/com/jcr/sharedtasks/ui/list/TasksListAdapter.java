@@ -56,7 +56,6 @@ public class TasksListAdapter extends DataBoundListAdapter<Task, TaskItemBinding
     protected boolean areContentsTheSame(Task oldTask, Task newTask) {
         return Objects.equals(oldTask.taskSID, newTask.taskSID) &&
                 Objects.equals(oldTask.assignee, newTask.assignee) &&
-                Objects.equals(oldTask.isAssigned, newTask.isAssigned) &&
                 Objects.equals(oldTask.date, newTask.date) &&
                 Objects.equals(oldTask.description, newTask.description) &&
                 Objects.equals(oldTask.state, newTask.state) &&

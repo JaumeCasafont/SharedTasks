@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="task"
+            type="com.jcr.sharedtasks.model.Task"/>
+    </data>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/task_title_et"
+                style="@style/CardTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/task_title_hint"
+                android:text="@{task.title}"
+                app:layout_constraintEnd_toStartOf="@+id/user_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/user_name"
+                style="@style/assignMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@{task.assignee == null ? @string/assign_task : task.assignee}"
+                app:layout_constraintBottom_toBottomOf="@+id/task_title_et"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/task_title_et" />
+
+            <EditText
+                android:id="@+id/task_description_et"
+                style="@style/CardDescription"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="36dp"
+                android:gravity="top"
+                android:hint="@string/task_description_hint"
+                android:text="@{task.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/task_title_et" />
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="12dp"
+                android:alpha="0.12"
+                android:background="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@id/priority" />
+
+            <TextView
+                android:id="@+id/priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@{task.hasPriority ? @drawable/ic_flag_high_priority : @drawable/ic_flag_no_priority}"
+                android:text="@{task.hasPriority ? @string/task_high_priority : @string/task_no_priority}"
+                app:layout_constraintStart_toStartOf="@id/task_description_et"
+                app:layout_constraintTop_toBottomOf="@id/task_description_et" />
+
+            <TextView
+                android:id="@+id/task_due_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_calendar_clock"
+                app:dateInDetail="@{task.date}"
+                app:layout_constraintStart_toStartOf="@id/task_description_et"
+                app:layout_constraintTop_toBottomOf="@id/priority" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</layout>

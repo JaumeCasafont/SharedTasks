@@ -19,20 +19,18 @@ public class Task {
     public String taskProjectUUID;
     @NonNull
     public String taskSID;
-    public String date;
+    public long date;
     public String title;
-    public boolean isAssigned;
     public String assignee;
     public String description;
     public int state;
     public boolean hasPriority;
     public int remotePosition;
 
-    public Task(String taskSID, String date, String title, boolean isAssigned, String assignee, String description, int state, boolean hasPriority) {
+    public Task(String taskSID, long date, String title, String assignee, String description, int state, boolean hasPriority) {
         this.taskSID = taskSID;
         this.date = date;
         this.title = title;
-        this.isAssigned = isAssigned;
         this.assignee = assignee;
         this.description = description;
         this.state = state;
@@ -49,7 +47,6 @@ public class Task {
         this.taskSID = task.getTaskSID();
         this.date = task.getDate();
         this.title = task.getTitle();
-        this.isAssigned = task.isAssigned();
         this.assignee = task.getAssignee();
         this.description = task.getDescription();
         this.state = task.getState();
@@ -70,16 +67,12 @@ public class Task {
         return taskSID;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public boolean isAssigned() {
-        return isAssigned;
     }
 
     public String getAssignee() {
@@ -102,16 +95,12 @@ public class Task {
         this.taskSID = taskSID;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setAssigned(boolean assigned) {
-        isAssigned = assigned;
     }
 
     public void setAssignee(String assignee) {

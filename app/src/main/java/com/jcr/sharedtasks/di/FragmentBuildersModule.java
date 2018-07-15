@@ -17,6 +17,7 @@
 package com.jcr.sharedtasks.di;
 
 import com.jcr.sharedtasks.ui.list.TasksListFragment;
+import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -25,4 +26,7 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
     abstract TasksListFragment contributeListFragment();
+
+    @ContributesAndroidInjector
+    abstract TaskDetailFragment contributeTaskDetailFragment();
 }

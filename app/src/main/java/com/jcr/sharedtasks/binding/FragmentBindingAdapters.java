@@ -18,7 +18,11 @@ package com.jcr.sharedtasks.binding;
 
 import android.databinding.BindingAdapter;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.TextView;
+
+import com.jcr.sharedtasks.R;
+import com.jcr.sharedtasks.util.TimeUtils;
 
 import javax.inject.Inject;
 
@@ -33,8 +37,21 @@ public class FragmentBindingAdapters {
         this.fragment = fragment;
     }
 
-    @BindingAdapter("date")
-    public void bindImage(TextView textView, String dateUTC) {
-        textView.setText(dateUTC);
+    @BindingAdapter("dateInDetail")
+    public void bindDateInDetail(TextView textView, long timeInMillis) {
+        if (timeInMillis == 0) {
+            textView.setText(fragment.getString(R.string.task_date_empty));
+        } else {
+            textView.setText(TimeUtils.getDateFormatted(timeInMillis));
+        }
+    }
+
+    @BindingAdapter("dateInList")
+    public void bindDateInList(TextView textView, long timeInMillis) {
+        if (timeInMillis == 0) {
+            textView.setVisibility(View.INVISIBLE);
+        } else {
+            textView.setText(TimeUtils.getDateFormatted(timeInMillis));
+        }
     }
 }

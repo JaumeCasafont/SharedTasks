@@ -33,4 +33,8 @@ public abstract class ProjectsDao {
     @Query("SELECT * FROM task "
             + "WHERE taskProjectUUID = :projectUUID ")
     public abstract LiveData<List<Task>> loadTasks(String projectUUID);
+
+    @Query("SELECT * FROM task "
+            + "WHERE taskSID = :taskSID")
+    public abstract LiveData<Task> loadTask(String taskSID);
 }

@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         SharedPreferences sharedPreferences = getSharedPreferences("com.jcr.sharedtasks", Context.MODE_PRIVATE);
         if (sharedPreferences.contains("lastLoadedProject") && savedInstanceState == null) {
             navigationController.navigateToTasksList(sharedPreferences.getString("lastLoadedProject", ""));
-        } else {
-            findViewById(R.id.welcome_text).setVisibility(View.VISIBLE);
         }
     }
 
@@ -109,13 +107,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(currentProjectName == null ?
-                        getString(R.string.app_name) : currentProjectName);
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(getString(R.string.drawer_opened_title));
             }
         };
 

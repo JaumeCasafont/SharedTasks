@@ -36,6 +36,7 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 
     // Room
