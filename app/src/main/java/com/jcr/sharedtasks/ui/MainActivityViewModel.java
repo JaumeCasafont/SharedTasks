@@ -49,6 +49,10 @@ public class MainActivityViewModel extends ViewModel {
         logged.setValue(true);
     }
 
+    public boolean isUserLogged() {
+        return logged.getValue() != null && logged.getValue();
+    }
+
     public LiveData<List<ProjectReference>> getProjectUUIDs() {
         return projectsReferences;
     }

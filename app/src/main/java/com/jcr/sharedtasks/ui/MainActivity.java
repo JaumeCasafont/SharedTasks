@@ -142,9 +142,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main_activity, menu);
         mMenu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, mMenu);
+        if (mViewModel.isUserLogged()) {
+            mMenu.findItem(R.id.create_project).setEnabled(true);
+        }
         return true;
     }
 
@@ -181,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             projectReferences = result;
             fillDrawer();
         });
+        if (mMenu != null) {
+            mMenu.findItem(R.id.create_project).setEnabled(true);
+        }
         if (getIntent().getData() != null) {
             navigationController.navigateToTasksList(
                     mViewModel.parseDeeplink(getIntent().getData()));

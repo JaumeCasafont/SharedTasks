@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +23,7 @@ import com.jcr.sharedtasks.util.AutoClearedValue;
 
 import javax.inject.Inject;
 
-import static com.android.databinding.library.baseAdapters.BR.projectTasksList;
+import static com.jcr.sharedtasks.BR.projectTasksList;
 
 public class TasksListFragment extends Fragment implements Injectable {
 
@@ -78,6 +80,12 @@ public class TasksListFragment extends Fragment implements Injectable {
         adapter = new AutoClearedValue<>(this, tasksListAdapter);
 
         fillViews();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_task_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void fillViews() {

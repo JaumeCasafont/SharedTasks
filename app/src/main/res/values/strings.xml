@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SharedTasks</string>
     <string name="welcome">Welcome to SharedTasks!</string>
+    <string name="create_project">Create new project</string>
 
     <string name="assign_task">Assign me</string>
     <string name="open_drawer_description">List of all your projects</string>
