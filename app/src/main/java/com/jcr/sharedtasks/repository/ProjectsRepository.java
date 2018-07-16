@@ -31,7 +31,7 @@ public class ProjectsRepository {
     private final SharedPreferences sharedPreferences;
 
     private List<ProjectReference> projectReferencesCache;
-    private String currentProjectUUID;
+    private Project cachedProject;
     private int lastRemotePosition;
 
     @Inject
@@ -45,12 +45,26 @@ public class ProjectsRepository {
         projectReferencesCache = new ArrayList<>();
     }
 
+    public String getCurrentProjectUUID() {
+        return cachedProject.getProjectUUID();
+    }
+
+    public String getCurrentProjectName() {
+        return cachedProject.getName();
+    }
+
+    public void createProjectReference(ProjectReference projectReference) {
+        String userUid = sharedPreferences.getString("userUid", "");
+        if (projectReferencePosition(projectReference) == -1) {
+            dataRef.child(userUid).push().setValue(projectReference);
+        }
+    }
+
     public void createProject(String projectUUID, Project project) {
         dataRef.child(projectUUID).setValue(project);
 
-        String userUid = sharedPreferences.getString("userUid", "");
         ProjectReference projectReference = new ProjectReference(projectUUID, project.getName());
-        dataRef.child(userUid).push().setValue(projectReference);
+        createProjectReference(projectReference);
     }
 
     public LiveData<List<ProjectReference>> getProjectsReferences() {
@@ -77,7 +91,6 @@ public class ProjectsRepository {
     }
 
     public LiveData<List<Task>> loadTasks(String projectUUID) {
-        currentProjectUUID = projectUUID;
         sharedPreferences.edit().putString("lastLoadedProject", projectUUID).apply();
         MediatorLiveData<List<Task>> result = new MediatorLiveData<>();
         LiveData<List<Task>> dbSource = projectsDao.loadTasks(projectUUID);
@@ -116,7 +129,7 @@ public class ProjectsRepository {
 
     public void sendTask(Task task) {
         if (task.getTaskProjectUUID() == null) {
-            task.setTaskProjectUUID(currentProjectUUID);
+            task.setTaskProjectUUID(cachedProject.getProjectUUID());
             task.setRemotePosition(lastRemotePosition + 1);
         }
         saveTask(task);
@@ -157,9 +170,9 @@ public class ProjectsRepository {
     }
 
     private List<Task> deserializeProjectTasks(DataSnapshot dataSnapshot) {
-        Project project = dataSnapshot.getValue(Project.class);
-        addRemotePositions(project);
-        return project.getTasks();
+        cachedProject = dataSnapshot.getValue(Project.class);
+        addRemotePositions(cachedProject);
+        return cachedProject.getTasks();
     }
 
     private void addRemotePositions(Project project) {

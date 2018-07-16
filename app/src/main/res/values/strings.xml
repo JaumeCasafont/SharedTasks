@@ -6,6 +6,9 @@
     <string name="open_drawer_description">List of all your projects</string>
     <string name="close_drawer_description">Tasks of selected project</string>
     <string name="drawer_opened_title">Select a project</string>
+    <string name="invite_people">Invite</string>
+    <string name="save_task">Save</string>
+    <string name="invite_content">Click the following link to join&#160;</string>
 
     <string name="edit_task">Edit task</string>
     <string name="add_task">Add task</string>

@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.net.Uri;
 import android.support.annotation.VisibleForTesting;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -13,6 +14,7 @@ import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.repository.SignInRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
+import com.jcr.sharedtasks.util.DeepLinkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,17 @@ public class MainActivityViewModel extends ViewModel {
 
     public LiveData<List<ProjectReference>> getProjectUUIDs() {
         return projectsReferences;
+    }
+
+    public String getDeepLinkOfCurrentProject() {
+        return DeepLinkUtils.DEEPLINK_HOST + projectsRepository.getCurrentProjectName().replace(" ", "&")
+                + "/" + projectsRepository.getCurrentProjectUUID();
+    }
+
+    public String parseDeeplink(Uri data) {
+        ProjectReference invitedProjectReference = DeepLinkUtils.parseProjectUUID(data);
+        projectsRepository.createProjectReference(invitedProjectReference);
+        return invitedProjectReference.getProjectUUID();
     }
 
     public void createProject() {

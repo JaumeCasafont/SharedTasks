@@ -82,8 +82,12 @@ public class TasksListFragment extends Fragment implements Injectable {
 
     private void fillViews() {
         tasksListViewModel.getProjectReference().observe(this,
-                projectReference -> ((AppCompatActivity)getActivity()).getSupportActionBar()
-                        .setTitle(projectReference.getProjectName()));
+                projectReference -> {
+                    if (projectReference != null) {
+                        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                                .setTitle(projectReference.getProjectName());
+                    }
+                });
 
         binding.get().addTask.setOnClickListener(v -> onNewTaskClick());
         initRecyclerView();

@@ -3,6 +3,7 @@ package com.jcr.sharedtasks.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -49,10 +52,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     private MainActivityViewModel mViewModel;
 
     private DrawerLayout mDrawerLayout;
+    private Menu mMenu;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
     private ArrayAdapter<String> mDrawerAdapter;
-    private String currentProjectName;
 
     private List<ProjectReference> projectReferences = new ArrayList<>();
 
@@ -69,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.jcr.sharedtasks", Context.MODE_PRIVATE);
         if (sharedPreferences.contains("lastLoadedProject") && savedInstanceState == null) {
-            navigationController.navigateToTasksList(sharedPreferences.getString("lastLoadedProject", ""));
+            String projectUUID = sharedPreferences.getString("lastLoadedProject", "");
+            navigationController.navigateToTasksList(projectUUID);
         }
     }
 
@@ -137,11 +141,23 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        mMenu = menu;
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
+        switch (item.getItemId()) {
+            case R.id.add_people:
+                sendInvite();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -165,6 +181,11 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             projectReferences = result;
             fillDrawer();
         });
+        if (getIntent().getData() != null) {
+            navigationController.navigateToTasksList(
+                    mViewModel.parseDeeplink(getIntent().getData()));
+            getIntent().setData(null);
+        }
         //mViewModel.createProject();
     }
 
@@ -177,13 +198,22 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private void navigateToFragment(int position) {
         if (projectReferences != null && !projectReferences.isEmpty()) {
-            currentProjectName = projectReferences.get(position).getProjectName();
-            navigationController.navigateToTasksList(projectReferences.get(position).getProjectUUID());
+            String projectUUID = projectReferences.get(position).getProjectUUID();
+            navigationController.navigateToTasksList(projectUUID);
         }
     }
 
     private void onSignedOutCleanup() {
 
+    }
+
+    private void sendInvite() {
+        Intent sendIntent = new Intent();
+        String msg = getString(R.string.invite_content);
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, msg + mViewModel.getDeepLinkOfCurrentProject());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     @Override
