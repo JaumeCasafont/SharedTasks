@@ -79,6 +79,8 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
         Bundle args = getArguments();
         if (args.containsKey(TASK_SID_KEY)) {
             taskDetailViewModel.setTaskSID(args.getString(TASK_SID_KEY));
+        } else {
+            taskDetailViewModel.setTaskSID(null);
         }
 
         fillViews();

@@ -22,4 +22,7 @@
 
     <string name="new_project_hint">New Project name</string>
     <string name="new_project_error_name">Project must have a name</string>
+
+    <string name="tasks_widget_title">Your current tasks</string>
+    <string name="appwidget_notification_channel_name">Channel SharedTasks widget</string>
 </resources>

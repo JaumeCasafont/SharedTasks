@@ -46,10 +46,12 @@ public class ProjectsRepository {
     }
 
     public String getCurrentProjectUUID() {
+        if (cachedProject == null) return "";
         return cachedProject.getProjectUUID();
     }
 
     public String getCurrentProjectName() {
+        if (cachedProject == null) return "";
         return cachedProject.getName();
     }
 
@@ -107,6 +109,11 @@ public class ProjectsRepository {
         });
 
         return result;
+    }
+
+    public LiveData<List<Task>> loadMyTasks() {
+        return projectsDao.loadMyTasks(
+                sharedPreferences.getString("userName", ""));
     }
 
     public LiveData<Task> loadTask(String taskSID) {

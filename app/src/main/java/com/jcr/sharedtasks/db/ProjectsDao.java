@@ -35,6 +35,10 @@ public abstract class ProjectsDao {
     public abstract LiveData<List<Task>> loadTasks(String projectUUID);
 
     @Query("SELECT * FROM task "
+            + "WHERE assignee = :assignee AND state < 2")
+    public abstract LiveData<List<Task>> loadMyTasks(String assignee);
+
+    @Query("SELECT * FROM task "
             + "WHERE taskSID = :taskSID")
     public abstract LiveData<Task> loadTask(String taskSID);
 }

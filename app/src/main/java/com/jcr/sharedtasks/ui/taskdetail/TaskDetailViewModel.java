@@ -40,7 +40,7 @@ public class TaskDetailViewModel extends ViewModel {
     }
 
     public void setTaskSID(String taskSID) {
-        if (Objects.equals(taskSID, this.taskSID.getValue())) {
+        if (Objects.equals(taskSID, this.taskSID.getValue()) && taskSID != null) {
             return;
         }
         if (taskSID == null) {

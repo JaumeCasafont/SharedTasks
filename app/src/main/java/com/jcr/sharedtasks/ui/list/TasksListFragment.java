@@ -24,6 +24,7 @@ import com.jcr.sharedtasks.databinding.TasksListFragmentBinding;
 import com.jcr.sharedtasks.di.Injectable;
 import com.jcr.sharedtasks.ui.common.NavigationController;
 import com.jcr.sharedtasks.util.AutoClearedValue;
+import com.jcr.sharedtasks.widget.TasksListWidgetService;
 
 import javax.inject.Inject;
 
@@ -84,6 +85,7 @@ public class TasksListFragment extends Fragment implements Injectable {
         adapter = new AutoClearedValue<>(this, tasksListAdapter);
 
         fillViews();
+        TasksListWidgetService.startActionUpdateIngredientsList(getContext());
     }
 
     @Override
