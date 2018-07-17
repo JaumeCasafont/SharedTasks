@@ -48,10 +48,13 @@
 
             <TextView
                 android:id="@+id/info_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{task.title}"
+                android:maxLines="1"
+                android:ellipsize="end"
                 style="@style/CardTitle"
+                app:layout_constraintEnd_toStartOf="@+id/assignee_name"
                 app:layout_constraintStart_toStartOf="@+id/text_header"
                 app:layout_constraintTop_toBottomOf="@+id/text_header" />
 
@@ -71,12 +74,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{task.description}"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:ellipsize="end"
                 style="@style/CardDescription"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintEnd_toStartOf="@id/assignee_name"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/text_header"
                 app:layout_constraintTop_toBottomOf="@+id/info_text"/>
 
