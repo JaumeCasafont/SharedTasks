@@ -1,5 +1,6 @@
 package com.jcr.sharedtasks.ui.list;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.jcr.sharedtasks.R;
 import com.jcr.sharedtasks.binding.FragmentDataBindingComponent;
@@ -102,6 +104,22 @@ public class TasksListFragment extends Fragment implements Injectable {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        Activity activity = getActivity();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     private void sendInvite() {
         Intent sendIntent = new Intent();

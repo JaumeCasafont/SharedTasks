@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -124,8 +125,9 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
 
     private void fillViews() {
         taskDetailViewModel.getTask().observe(this, task -> {
-            if (task != null) taskDetailViewModel.initValues();
-            binding.get().setTask(task);
+            if (task != null) {
+                binding.get().setTask(taskDetailViewModel.getTaskToUpload());
+            }
         });
         binding.get().priority.setOnClickListener(v -> onPriorityClick());
         binding.get().userName.setOnClickListener(v -> onAssigneeClick());
@@ -181,5 +183,12 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         taskDetailViewModel.updateDate(TimeUtils.getDateInMillis(year, month, dayOfMonth));
         binding.get().taskDueDate.setText(TimeUtils.getDateFormatted(year, month, dayOfMonth));
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        taskDetailViewModel.updateTitle(binding.get().taskTitleEt.getText().toString());
+        taskDetailViewModel.updateDescription(binding.get().taskDescriptionEt.getText().toString());
     }
 }

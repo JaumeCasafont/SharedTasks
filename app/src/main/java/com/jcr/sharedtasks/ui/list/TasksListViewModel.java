@@ -11,6 +11,7 @@ import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
 import com.jcr.sharedtasks.util.DeepLinkUtils;
+import com.jcr.sharedtasks.util.Objects;
 
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class TasksListViewModel extends ViewModel {
     }
 
     public void setProjectUUID(String projectUUID) {
+        if (Objects.equals(projectUUID, this.projectUUID.getValue())) {
+            return;
+        }
         this.projectUUID.setValue(projectUUID);
     }
 

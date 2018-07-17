@@ -10,6 +10,7 @@ import android.support.annotation.VisibleForTesting;
 import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
+import com.jcr.sharedtasks.util.Objects;
 import com.jcr.sharedtasks.util.TimeUtils;
 
 import java.util.UUID;
@@ -23,8 +24,6 @@ public class TaskDetailViewModel extends ViewModel {
     private final LiveData<Task> task;
     private final ProjectsRepository repository;
     private Task taskToUpload;
-    private boolean isNewTask = false;
-    private long dateInMillis;
     private boolean priority;
     private String assignee;
 
@@ -41,19 +40,23 @@ public class TaskDetailViewModel extends ViewModel {
     }
 
     public void setTaskSID(String taskSID) {
+        if (Objects.equals(taskSID, this.taskSID.getValue())) {
+            return;
+        }
         if (taskSID == null) {
-            isNewTask = true;
             taskToUpload = new Task(UUID.randomUUID().toString());
         } else {
             this.taskSID.setValue(taskSID);
         }
     }
 
-    public void initValues() {
-        taskToUpload = new Task(task.getValue());
+    public Task getTaskToUpload() {
+        if (taskToUpload == null) {
+            taskToUpload = new Task(task.getValue());
+        }
         priority = taskToUpload.hasPriority();
         assignee = taskToUpload.getAssignee();
-        dateInMillis = taskToUpload.getDate();
+        return taskToUpload;
     }
 
     public LiveData<Task> getTask() {
@@ -66,11 +69,13 @@ public class TaskDetailViewModel extends ViewModel {
         } else {
             this.assignee = !this.assignee.equals(assignee) ? assignee : null;
         }
+        taskToUpload.setAssignee(this.assignee);
         return this.assignee;
     }
 
     public boolean updatePriority() {
         priority = !priority;
+        taskToUpload.setHasPriority(priority);
         return priority;
     }
 
@@ -84,15 +89,20 @@ public class TaskDetailViewModel extends ViewModel {
     }
 
     public void updateDate(long date) {
-        dateInMillis = date;
+        taskToUpload.setDate(date);
+    }
+
+    public void updateTitle(String title) {
+        taskToUpload.setTitle(title);
+    }
+
+    public void updateDescription(String description) {
+        taskToUpload.setDescription(description);
     }
 
     public void saveTask(String title, String description) {
         taskToUpload.setTitle(title);
         taskToUpload.setDescription(description);
-        taskToUpload.setDate(dateInMillis);
-        taskToUpload.setHasPriority(priority);
-        taskToUpload.setAssignee(assignee);
         repository.sendTask(taskToUpload);
     }
 }
