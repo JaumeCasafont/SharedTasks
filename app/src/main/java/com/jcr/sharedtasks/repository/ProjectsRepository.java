@@ -123,8 +123,11 @@ public class ProjectsRepository {
 
     public void updateTaskAssignee(Task task) {
         Task updatedAssigneeTask = new Task(task);
-        updatedAssigneeTask.setAssignee(sharedPreferences.getString("userName", " "));
-        sendTask(updatedAssigneeTask);
+        String assignee = sharedPreferences.getString("userName", " ");
+        if (!assignee.equals(updatedAssigneeTask.getAssignee())) {
+            updatedAssigneeTask.setAssignee(assignee);
+            sendTask(updatedAssigneeTask);
+        }
     }
 
     public void sendTask(Task task) {
