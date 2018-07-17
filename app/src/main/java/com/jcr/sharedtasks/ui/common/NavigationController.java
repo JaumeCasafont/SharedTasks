@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.jcr.sharedtasks.R;
 import com.jcr.sharedtasks.ui.MainActivity;
+import com.jcr.sharedtasks.ui.createproject.CreateProjectFragment;
 import com.jcr.sharedtasks.ui.list.TasksListFragment;
 import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment;
 
@@ -33,5 +34,16 @@ public class NavigationController {
                 .replace(containerId, taskDetailFragment, tag)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void navigateToCreateProject() {
+        CreateProjectFragment createProjectFragment = new CreateProjectFragment();
+        String tag = "createProject";
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            fragmentManager.beginTransaction()
+                    .replace(containerId, createProjectFragment, tag)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

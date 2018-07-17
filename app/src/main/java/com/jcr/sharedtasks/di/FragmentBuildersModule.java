@@ -16,6 +16,7 @@
 
 package com.jcr.sharedtasks.di;
 
+import com.jcr.sharedtasks.ui.createproject.CreateProjectFragment;
 import com.jcr.sharedtasks.ui.list.TasksListFragment;
 import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment;
 
@@ -29,4 +30,7 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract TaskDetailFragment contributeTaskDetailFragment();
+
+    @ContributesAndroidInjector
+    abstract CreateProjectFragment contributeCreateProjectFragment();
 }

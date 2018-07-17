@@ -57,25 +57,9 @@ public class MainActivityViewModel extends ViewModel {
         return projectsReferences;
     }
 
-    public String getDeepLinkOfCurrentProject() {
-        return DeepLinkUtils.DEEPLINK_HOST + projectsRepository.getCurrentProjectName().replace(" ", "&")
-                + "/" + projectsRepository.getCurrentProjectUUID();
-    }
-
     public String parseDeeplink(Uri data) {
         ProjectReference invitedProjectReference = DeepLinkUtils.parseProjectUUID(data);
         projectsRepository.createProjectReference(invitedProjectReference);
         return invitedProjectReference.getProjectUUID();
-    }
-
-    public void createProject() {
-        String projectUUID = UUID.randomUUID().toString();
-        String taskSID = UUID.randomUUID().toString();
-        List<Task> tasks = new ArrayList<>();
-
-        Task newTask = new Task(taskSID, 0, "title", "assignee", "description", 0, true, 0);
-        newTask.setTaskProjectUUID(projectUUID);
-        tasks.add(newTask);
-        projectsRepository.createProject(projectUUID, new Project(projectUUID, "Project V2", tasks));
     }
 }

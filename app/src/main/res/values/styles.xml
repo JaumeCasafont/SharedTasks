@@ -8,10 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CardTitle" parent="android:TextAppearance">
+    <style name="TextBigBlack" parent="android:TextAppearance">
         <item name="android:textSize">21dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/textCard</item>
+    </style>
+
+    <style name="CardTitle" parent="TextBigBlack">
     </style>
 
     <style name="CardButton" parent="android:TextAppearance">

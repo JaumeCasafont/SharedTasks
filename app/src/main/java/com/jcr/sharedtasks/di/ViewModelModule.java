@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.jcr.sharedtasks.ui.MainActivityViewModel;
+import com.jcr.sharedtasks.ui.createproject.CreateProjectViewModel;
 import com.jcr.sharedtasks.ui.list.TasksListViewModel;
 import com.jcr.sharedtasks.ui.taskdetail.TaskDetailViewModel;
 import com.jcr.sharedtasks.viewmodel.SharedTasksViewModelFactory;
@@ -28,6 +29,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TaskDetailViewModel.class)
     abstract ViewModel bindTaskDetailViewModel(TaskDetailViewModel taskDetailViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CreateProjectViewModel.class)
+    abstract ViewModel bindCreateProjectViewModel(CreateProjectViewModel createProjectViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(SharedTasksViewModelFactory factory);

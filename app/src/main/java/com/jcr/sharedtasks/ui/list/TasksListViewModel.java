@@ -10,6 +10,7 @@ import com.jcr.sharedtasks.model.ProjectReference;
 import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
 import com.jcr.sharedtasks.util.AbsentLiveData;
+import com.jcr.sharedtasks.util.DeepLinkUtils;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class TasksListViewModel extends ViewModel {
             }
             return repository.getProjectReferenceById(input);
         });
+    }
+
+    public String getDeepLinkOfCurrentProject() {
+        return DeepLinkUtils.DEEPLINK_HOST + repository.getCurrentProjectName().replace(" ", "&")
+                + "/" + repository.getCurrentProjectUUID();
     }
 
     public void setProjectUUID(String projectUUID) {

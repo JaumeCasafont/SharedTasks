@@ -19,4 +19,7 @@
     <string name="task_no_priority">No priority</string>
     <string name="task_date_empty">Select a date...</string>
     <string name="task_title_empty_error">Title can\'t be empty!</string>
+
+    <string name="new_project_hint">New Project name</string>
+    <string name="new_project_error_name">Project must have a name</string>
 </resources>

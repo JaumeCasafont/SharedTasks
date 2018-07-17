@@ -60,10 +60,10 @@ public class ProjectsRepository {
         }
     }
 
-    public void createProject(String projectUUID, Project project) {
-        dataRef.child(projectUUID).setValue(project);
+    public void createProject(Project project) {
+        dataRef.child(project.getProjectUUID()).setValue(project);
 
-        ProjectReference projectReference = new ProjectReference(projectUUID, project.getName());
+        ProjectReference projectReference = new ProjectReference(project.getProjectUUID(), project.getName());
         createProjectReference(projectReference);
     }
 
@@ -176,9 +176,13 @@ public class ProjectsRepository {
     }
 
     private void addRemotePositions(Project project) {
-        for (int i = 0; i < project.getTasks().size(); i++) {
-            project.getTasks().get(i).setRemotePosition(i);
-            lastRemotePosition = i;
+        if (project.getTasks() == null || project.getTasks().isEmpty()) {
+            lastRemotePosition = -1;
+        } else {
+            for (int i = 0; i < project.getTasks().size(); i++) {
+                project.getTasks().get(i).setRemotePosition(i);
+                lastRemotePosition = i;
+            }
         }
     }
 }

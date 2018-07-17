@@ -10,9 +10,8 @@ public class Project {
     private List<Task> tasks;
     private String name;
 
-    public Project(@NonNull String projectUUID, String name, List<Task> tasks) {
+    public Project(@NonNull String projectUUID, String name) {
         this.projectUUID = projectUUID;
-        this.tasks = tasks;
         this.name = name;
     }
 

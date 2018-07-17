@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.add_people:
-                sendInvite();
+            case R.id.create_project:
+                navigationController.navigateToCreateProject();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                     mViewModel.parseDeeplink(getIntent().getData()));
             getIntent().setData(null);
         }
-        //mViewModel.createProject();
     }
 
     private void fillDrawer() {
@@ -211,15 +210,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private void onSignedOutCleanup() {
 
-    }
-
-    private void sendInvite() {
-        Intent sendIntent = new Intent();
-        String msg = getString(R.string.invite_content);
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, msg + mViewModel.getDeepLinkOfCurrentProject());
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
     }
 
     @Override
