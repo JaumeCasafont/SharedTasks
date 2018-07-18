@@ -1,8 +1,12 @@
 package com.jcr.sharedtasks.repository;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.Transformations;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +35,7 @@ public class ProjectsRepository {
     private final SharedPreferences sharedPreferences;
 
     private List<ProjectReference> projectReferencesCache;
-    private Project cachedProject;
+    private ProjectReference currentReference;
     private int lastRemotePosition;
 
     @Inject
@@ -46,13 +50,13 @@ public class ProjectsRepository {
     }
 
     public String getCurrentProjectUUID() {
-        if (cachedProject == null) return "";
-        return cachedProject.getProjectUUID();
+        if (currentReference == null) return "";
+        return currentReference.getProjectUUID();
     }
 
     public String getCurrentProjectName() {
-        if (cachedProject == null) return "";
-        return cachedProject.getName();
+        if (currentReference == null) return "";
+        return currentReference.getProjectName();
     }
 
     public void createProjectReference(ProjectReference projectReference) {
@@ -89,7 +93,10 @@ public class ProjectsRepository {
     }
 
     public LiveData<ProjectReference> getProjectReferenceById(String projectUUID) {
-        return projectsDao.loadProjectReferenceById(projectUUID);
+        MediatorLiveData<ProjectReference> result = new MediatorLiveData<>();
+        result.addSource(projectsDao.loadProjectReferenceById(projectUUID),
+                projectReference -> currentReference = projectReference);
+        return result;
     }
 
     public LiveData<List<Task>> loadTasks(String projectUUID) {
@@ -139,7 +146,7 @@ public class ProjectsRepository {
 
     public void sendTask(Task task) {
         if (task.getTaskProjectUUID() == null) {
-            task.setTaskProjectUUID(cachedProject.getProjectUUID());
+            task.setTaskProjectUUID(currentReference.getProjectUUID());
             task.setRemotePosition(lastRemotePosition + 1);
         }
         saveTask(task);
@@ -180,9 +187,9 @@ public class ProjectsRepository {
     }
 
     private List<Task> deserializeProjectTasks(DataSnapshot dataSnapshot) {
-        cachedProject = dataSnapshot.getValue(Project.class);
-        addRemotePositions(cachedProject);
-        return cachedProject.getTasks();
+        Project project = dataSnapshot.getValue(Project.class);
+        addRemotePositions(project);
+        return project.getTasks();
     }
 
     private void addRemotePositions(Project project) {
