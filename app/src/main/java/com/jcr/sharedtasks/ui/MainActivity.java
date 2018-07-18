@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             navigateToFragment(position);
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mDrawerLayout.closeDrawer(Gravity.START);
         }
     }
 }
