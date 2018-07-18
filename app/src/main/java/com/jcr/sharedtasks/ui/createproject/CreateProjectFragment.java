@@ -2,8 +2,10 @@ package com.jcr.sharedtasks.ui.createproject;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -62,12 +64,16 @@ public class CreateProjectFragment extends Fragment  implements Injectable {
 
     private void initViews() {
         binding.get().createProjectBtn.setOnClickListener(v -> {
-            String projectName = binding.get().projectNameEt.getText().toString();
-            String newProjectUUID = createProjectViewModel.createProject(projectName);
-            if (newProjectUUID != null) {
-                navigationController.navigateToTasksList(newProjectUUID, true);
+            if (checkInternetConnection()) {
+                String projectName = binding.get().projectNameEt.getText().toString();
+                String newProjectUUID = createProjectViewModel.createProject(projectName);
+                if (newProjectUUID != null) {
+                    navigationController.navigateToTasksList(newProjectUUID, true);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.new_project_error_name), Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(getContext(), getString(R.string.new_project_error_name), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.new_project_error_internet), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -79,4 +85,10 @@ public class CreateProjectFragment extends Fragment  implements Injectable {
         }
         actionBar.setTitle(R.string.create_project);
     }
+
+    private boolean checkInternetConnection() {
+        ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService (Context.CONNECTIVITY_SERVICE);
+        return conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable()
+                && conMgr.getActiveNetworkInfo().isConnected();
+        }
 }
