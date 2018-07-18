@@ -66,6 +66,9 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$firebase_version"
     implementation "com.google.firebase:firebase-auth:$firebase_version"
 
+    // FirebaseJobDispatcher
+    implementation "com.firebase:firebase-jobdispatcher:$firebase_jobdispatcher_version"
+
     // FirebaseUI
     implementation "com.firebaseui:firebase-ui-auth:$firebase_ui_version"
 

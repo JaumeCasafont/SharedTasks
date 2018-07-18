@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.jcr.sharedtasks.R;
 import com.jcr.sharedtasks.model.ProjectReference;
 import com.jcr.sharedtasks.ui.common.NavigationController;
+import com.jcr.sharedtasks.util.SyncDataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                     mViewModel.parseDeeplink(getIntent().getData()));
             getIntent().setData(null);
         }
+        SyncDataUtil.startSyncData(this);
     }
 
     private void fillDrawer() {

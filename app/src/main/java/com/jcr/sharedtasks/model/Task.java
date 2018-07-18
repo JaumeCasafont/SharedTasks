@@ -26,8 +26,9 @@ public class Task {
     public int state;
     public boolean hasPriority;
     public int remotePosition;
+    public boolean isUploaded;
 
-    public Task(String taskSID, long date, String title, String assignee, String description, int state, boolean hasPriority, int remotePosition) {
+    public Task(String taskSID, long date, String title, String assignee, String description, int state, boolean hasPriority, int remotePosition, boolean isUploaded) {
         this.taskSID = taskSID;
         this.date = date;
         this.title = title;
@@ -36,6 +37,7 @@ public class Task {
         this.state = state;
         this.hasPriority = hasPriority;
         this.remotePosition = remotePosition;
+        this.isUploaded = isUploaded;
     }
 
     @Ignore
@@ -58,6 +60,7 @@ public class Task {
         this.state = task.getState();
         this.hasPriority = task.hasPriority();
         this.remotePosition = task.getRemotePosition();
+        this.isUploaded = task.isUploaded;
     }
 
     @NonNull
@@ -132,5 +135,13 @@ public class Task {
 
     public void setRemotePosition(int remotePosition) {
         this.remotePosition = remotePosition;
+    }
+
+    public boolean isUploaded() {
+        return isUploaded;
+    }
+
+    public void setUploaded(boolean uploaded) {
+        isUploaded = uploaded;
     }
 }

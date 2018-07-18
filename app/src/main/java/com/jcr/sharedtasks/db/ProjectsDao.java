@@ -41,4 +41,8 @@ public abstract class ProjectsDao {
     @Query("SELECT * FROM task "
             + "WHERE taskSID = :taskSID")
     public abstract LiveData<Task> loadTask(String taskSID);
+
+    @Query("SELECT * FROM task "
+            + "WHERE NOT isUploaded")
+    public abstract LiveData<List<Task>> loadLocalTasks();
 }

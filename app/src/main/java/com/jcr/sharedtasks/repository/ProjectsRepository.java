@@ -1,12 +1,8 @@
 package com.jcr.sharedtasks.repository;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.Transformations;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -153,6 +149,10 @@ public class ProjectsRepository {
         uploadTask(task);
     }
 
+    public LiveData<List<Task>> loadLocalTasks() {
+        return projectsDao.loadLocalTasks();
+    }
+
     private void saveTask(Task task) {
         appExecutors.diskIO().execute(() -> projectsDao.insertTask(task));
     }
@@ -188,16 +188,18 @@ public class ProjectsRepository {
 
     private List<Task> deserializeProjectTasks(DataSnapshot dataSnapshot) {
         Project project = dataSnapshot.getValue(Project.class);
-        addRemotePositions(project);
+        if (project == null) return null;
+        syncTasksDataWithServer(project);
         return project.getTasks();
     }
 
-    private void addRemotePositions(Project project) {
+    private void syncTasksDataWithServer(Project project) {
         if (project.getTasks() == null || project.getTasks().isEmpty()) {
             lastRemotePosition = -1;
         } else {
             for (int i = 0; i < project.getTasks().size(); i++) {
                 project.getTasks().get(i).setRemotePosition(i);
+                project.getTasks().get(i).setUploaded(true);
                 lastRemotePosition = i;
             }
         }

@@ -4,7 +4,16 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.JobTrigger;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 import com.jcr.sharedtasks.di.AppInjector;
+import com.jcr.sharedtasks.sync.SyncDataFirebaseJobService;
 
 import javax.inject.Inject;
 
@@ -14,7 +23,7 @@ import dagger.android.HasActivityInjector;
 import dagger.android.HasServiceInjector;
 import timber.log.Timber;
 
-public class SharedTasksApp extends Application implements HasActivityInjector, HasServiceInjector{
+public class SharedTasksApp extends Application implements HasActivityInjector, HasServiceInjector {
 
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
