@@ -2,7 +2,9 @@ package com.jcr.sharedtasks.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -90,8 +92,10 @@ public class ProjectsRepository {
 
     public LiveData<ProjectReference> getProjectReferenceById(String projectUUID) {
         MediatorLiveData<ProjectReference> result = new MediatorLiveData<>();
-        result.addSource(projectsDao.loadProjectReferenceById(projectUUID),
-                projectReference -> currentReference = projectReference);
+        result.addSource(projectsDao.loadProjectReferenceById(projectUUID), projectReference -> {
+            currentReference = projectReference;
+            result.setValue(currentReference);
+        });
         return result;
     }
 

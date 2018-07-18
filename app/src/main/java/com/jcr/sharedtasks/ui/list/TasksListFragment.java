@@ -9,6 +9,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -136,13 +137,20 @@ public class TasksListFragment extends Fragment implements Injectable {
         tasksListViewModel.getProjectReference().observe(this,
                 projectReference -> {
                     if (projectReference != null) {
-                        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                                .setTitle(projectReference.getProjectName());
+                        setupActionBar(projectReference.getProjectName());
                     }
                 });
 
         binding.get().addTask.setOnClickListener(v -> onNewTaskClick());
         initRecyclerView();
+    }
+
+    private void setupActionBar(String projectName) {
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        actionBar.setTitle(projectName);
     }
 
     private void initRecyclerView() {
