@@ -18,6 +18,9 @@ public abstract class ProjectsDao {
     public abstract void insertProjectsReferences(List<ProjectReference> projectReferences);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertProjectsReference(ProjectReference projectReference);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertTasks(List<Task> tasks);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -80,10 +80,10 @@ public class ProjectsRepository {
         result.addSource(dbSource, result::setValue);
 
         result.addSource(networkSource, dataSnapshot -> {
-            List<ProjectReference> projectReferences = deserializeProjectReference(dataSnapshot);
-            if (projectReferences != null) {
-                result.setValue(projectReferences);
-                appExecutors.diskIO().execute(() -> projectsDao.insertProjectsReferences(projectReferences));
+            ProjectReference projectReference = deserializeProjectReference(dataSnapshot);
+            if (projectReference != null) {
+                result.setValue(projectReferencesCache);
+                appExecutors.diskIO().execute(() -> projectsDao.insertProjectsReference(projectReference));
             }
         });
 
@@ -166,7 +166,7 @@ public class ProjectsRepository {
                 .setValue(task);
     }
 
-    private List<ProjectReference> deserializeProjectReference(DataSnapshot dataSnapshot) {
+    private ProjectReference deserializeProjectReference(DataSnapshot dataSnapshot) {
         ProjectReference projectReference = dataSnapshot.getValue(ProjectReference.class);
         if (projectReference != null && projectReference.getProjectUUID() != null) {
             int position = projectReferencePosition(projectReference);
@@ -177,7 +177,7 @@ public class ProjectsRepository {
             }
         }
 
-        return projectReferencesCache;
+        return projectReference;
     }
 
     private int projectReferencePosition(ProjectReference projectReference) {
