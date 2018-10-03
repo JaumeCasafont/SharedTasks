@@ -33,7 +33,7 @@ public class NavigationController {
     }
 
     public void navigateToTaskDetail(String taskSID) {
-        TaskDetailFragment taskDetailFragment = TaskDetailFragment.create(taskSID);
+        TaskDetailFragment taskDetailFragment = TaskDetailFragment.Companion.create(taskSID);
         String tag = "task" + "/" + taskSID;
         fragmentManager.beginTransaction()
                 .replace(containerId, taskDetailFragment, tag)

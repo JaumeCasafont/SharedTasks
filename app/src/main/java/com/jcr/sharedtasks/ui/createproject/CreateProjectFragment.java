@@ -3,7 +3,6 @@ package com.jcr.sharedtasks.ui.createproject;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import com.jcr.sharedtasks.binding.FragmentDataBindingComponent;
 import com.jcr.sharedtasks.databinding.FragmentCreateProjectBinding;
 import com.jcr.sharedtasks.di.Injectable;
 import com.jcr.sharedtasks.ui.common.NavigationController;
-import com.jcr.sharedtasks.ui.list.TasksListViewModel;
 import com.jcr.sharedtasks.util.AutoClearedValue;
 
 import javax.inject.Inject;
