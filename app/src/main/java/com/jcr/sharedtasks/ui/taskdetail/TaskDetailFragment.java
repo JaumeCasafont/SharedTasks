@@ -39,12 +39,12 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
     private static final String TASK_SID_KEY = "taskSID";
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    public ViewModelProvider.Factory viewModelFactory;
 
     @Inject
-    NavigationController navigationController;
+    public NavigationController navigationController;
 
-    android.databinding.DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
+    public android.databinding.DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
     AutoClearedValue<TaskDetailFragmentBinding> binding;
 
@@ -173,14 +173,6 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
         dialog.show();
     }
 
-    public static TaskDetailFragment create(String taskSID) {
-        TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(TASK_SID_KEY, taskSID);
-        taskDetailFragment.setArguments(args);
-        return taskDetailFragment;
-    }
-
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         taskDetailViewModel.updateDate(TimeUtils.getDateInMillis(year, month, dayOfMonth));
@@ -192,5 +184,13 @@ public class TaskDetailFragment extends Fragment implements Injectable, DatePick
         super.onSaveInstanceState(outState);
         taskDetailViewModel.updateTitle(binding.get().taskTitleEt.getText().toString());
         taskDetailViewModel.updateDescription(binding.get().taskDescriptionEt.getText().toString());
+    }
+
+    public static TaskDetailFragment create(String taskSID) {
+        TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
+        Bundle args = new Bundle();
+        args.putString(TASK_SID_KEY, taskSID);
+        taskDetailFragment.setArguments(args);
+        return taskDetailFragment;
     }
 }

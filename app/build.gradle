@@ -11,14 +11,14 @@ android {
             storePassword 'udacity2018'
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.jcr.sharedtasks"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.jcr.sharedtasks.util.SharedTasksTestRunner"
     }
     buildTypes {
         release {
@@ -83,6 +83,10 @@ dependencies {
     androidTestImplementation "com.android.support:support-annotations:$support_version"
     androidTestImplementation "com.android.support.test:runner:$support_test_version"
     androidTestImplementation "com.android.support.test:rules:$support_test_version"
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation "org.mockito:mockito-core:$mockito_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
+    androidTestImplementation "android.arch.core:core-testing:$lifecycle_version"
 
     // Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
@@ -92,6 +96,8 @@ dependencies {
 
     // Mockito
     testImplementation "org.mockito:mockito-core:$mockito_version"
+
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
