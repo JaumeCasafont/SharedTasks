@@ -11,32 +11,21 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.DatePicker
 import android.widget.Toast
-
 import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentDataBindingComponent
 import com.jcr.sharedtasks.databinding.TaskDetailFragmentBinding
 import com.jcr.sharedtasks.di.Injectable
-import com.jcr.sharedtasks.ui.common.NavigationController
 import com.jcr.sharedtasks.util.AutoClearedValue
 import com.jcr.sharedtasks.util.TimeUtils
-
 import javax.inject.Inject
 
 class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-//    @Inject
-//    lateinit var navigationController: NavigationController
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -110,7 +99,7 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
 
     private fun fillViews() {
         taskDetailViewModel.task.observe(this, Observer {
-                binding.get().task = taskDetailViewModel.taskToUpload
+                binding.get().task = taskDetailViewModel.getTaskToUpload()
         })
         binding.get().priority.setOnClickListener { onPriorityClick() }
         binding.get().userName.setOnClickListener { onAssigneeClick() }
@@ -174,7 +163,7 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
         private val TASK_SID_KEY = "taskSID"
 
         @JvmStatic
-        fun create(taskSID: String): TaskDetailFragment {
+        fun create(taskSID: String?): TaskDetailFragment {
             val taskDetailFragment = TaskDetailFragment()
             val args = Bundle()
             args.putString(TASK_SID_KEY, taskSID)
