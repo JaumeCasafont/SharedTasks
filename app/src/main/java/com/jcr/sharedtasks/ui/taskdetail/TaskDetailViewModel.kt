@@ -6,12 +6,14 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.repository.ProjectsRepository
+import com.jcr.sharedtasks.testing.OpenForTesting
 import com.jcr.sharedtasks.util.AbsentLiveData
 import com.jcr.sharedtasks.util.Objects
 import com.jcr.sharedtasks.util.TimeUtils
 import java.util.*
 import javax.inject.Inject
 
+@OpenForTesting
 class TaskDetailViewModel @Inject
 constructor(private val repository: ProjectsRepository) : ViewModel() {
 

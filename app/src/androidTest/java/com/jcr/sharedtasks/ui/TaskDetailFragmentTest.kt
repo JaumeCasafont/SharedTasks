@@ -64,7 +64,7 @@ class TaskDetailFragmentTest {
         val task = Task("taskSID", 1L, "task_title",
                 "assignee", "description",
                 0, false, 0, true)
-        `when`(viewModel.taskToUpload).thenReturn(task)
+        `when`(viewModel.getTaskToUpload()).thenReturn(task)
         taskLiveData.postValue(task)
 
         onView(withId(R.id.task_title_et)).check(
