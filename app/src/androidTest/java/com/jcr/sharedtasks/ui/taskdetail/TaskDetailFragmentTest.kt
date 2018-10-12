@@ -1,4 +1,4 @@
-package com.jcr.sharedtasks.ui
+package com.jcr.sharedtasks.ui.taskdetail
 
 import android.arch.lifecycle.MutableLiveData
 import android.databinding.DataBindingComponent
@@ -14,8 +14,6 @@ import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentBindingAdapters
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.testing.SingleFragmentActivity
-import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment
-import com.jcr.sharedtasks.ui.taskdetail.TaskDetailViewModel
 import com.jcr.sharedtasks.util.DataBindingIdlingResourceRule
 import com.jcr.sharedtasks.util.TaskExecutorWithIdlingResourceRule
 import com.jcr.sharedtasks.util.ViewModelUtil
