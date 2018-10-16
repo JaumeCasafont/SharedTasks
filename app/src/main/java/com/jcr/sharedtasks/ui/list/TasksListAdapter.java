@@ -1,7 +1,7 @@
 package com.jcr.sharedtasks.ui.list;
 
-import android.databinding.DataBindingComponent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingComponent;
+import androidx.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

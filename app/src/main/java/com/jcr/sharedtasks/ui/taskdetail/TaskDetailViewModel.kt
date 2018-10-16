@@ -1,9 +1,9 @@
 package com.jcr.sharedtasks.ui.taskdetail
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.repository.ProjectsRepository
 import com.jcr.sharedtasks.testing.OpenForTesting

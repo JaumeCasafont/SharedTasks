@@ -1,6 +1,6 @@
 package com.jcr.sharedtasks.ui.taskdetail
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jcr.sharedtasks.repository.ProjectsRepository
 import com.jcr.sharedtasks.util.mock
 import org.hamcrest.CoreMatchers.`is`

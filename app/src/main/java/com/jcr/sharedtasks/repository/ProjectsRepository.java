@@ -1,10 +1,10 @@
 package com.jcr.sharedtasks.repository;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;

@@ -1,7 +1,7 @@
 package com.jcr.sharedtasks.db;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import com.jcr.sharedtasks.model.ProjectReference;
 import com.jcr.sharedtasks.model.Task;

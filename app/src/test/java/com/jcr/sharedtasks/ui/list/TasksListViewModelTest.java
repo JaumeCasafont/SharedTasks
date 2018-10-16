@@ -1,11 +1,10 @@
 package com.jcr.sharedtasks.ui.list;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.arch.lifecycle.Observer;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.Observer;
 
 import com.jcr.sharedtasks.model.Task;
 import com.jcr.sharedtasks.repository.ProjectsRepository;
-import com.jcr.sharedtasks.ui.list.TasksListViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;

@@ -1,6 +1,6 @@
 package com.jcr.sharedtasks.ui.createproject;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import com.jcr.sharedtasks.model.Project;
 import com.jcr.sharedtasks.repository.ProjectsRepository;

@@ -16,7 +16,7 @@
 
 package com.jcr.sharedtasks.binding;
 
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.view.View;
 
 /**

@@ -1,13 +1,13 @@
 package com.jcr.sharedtasks.ui.createproject
 
-import android.databinding.DataBindingComponent
-import android.support.test.espresso.Espresso.closeSoftKeyboard
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.databinding.DataBindingComponent
+import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
 import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentBindingAdapters
 import com.jcr.sharedtasks.testing.SingleFragmentActivity

@@ -1,15 +1,15 @@
 package com.jcr.sharedtasks.ui.taskdetail
 
-import android.arch.lifecycle.MutableLiveData
-import android.databinding.DataBindingComponent
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.typeText
-import android.support.test.espresso.assertion.ViewAssertions
-import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.lifecycle.MutableLiveData
+import androidx.databinding.DataBindingComponent
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
 import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentBindingAdapters
 import com.jcr.sharedtasks.model.Task

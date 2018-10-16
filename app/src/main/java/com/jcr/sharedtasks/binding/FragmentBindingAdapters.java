@@ -16,8 +16,8 @@
 
 package com.jcr.sharedtasks.binding;
 
-import android.databinding.BindingAdapter;
-import android.support.v4.app.Fragment;
+import androidx.databinding.BindingAdapter;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 

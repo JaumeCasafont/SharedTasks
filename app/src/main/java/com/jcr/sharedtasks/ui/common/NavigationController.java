@@ -1,6 +1,6 @@
 package com.jcr.sharedtasks.ui.common;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.jcr.sharedtasks.R;
 import com.jcr.sharedtasks.ui.MainActivity;

@@ -1,21 +1,16 @@
 package com.jcr.sharedtasks.util;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import android.os.Handler;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.jcr.sharedtasks.AppExecutors;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {

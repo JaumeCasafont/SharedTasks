@@ -16,8 +16,8 @@
 
 package com.jcr.sharedtasks.util;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * A value holder that automatically clears the reference if the Fragment's view is destroyed.

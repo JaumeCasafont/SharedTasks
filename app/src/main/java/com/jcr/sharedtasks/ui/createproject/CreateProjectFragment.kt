@@ -1,14 +1,14 @@
 package com.jcr.sharedtasks.ui.createproject
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +31,7 @@ class CreateProjectFragment : Fragment(), Injectable {
     @Inject
     lateinit var navigationController: NavigationController
 
-    var dataBindingComponent: android.databinding.DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: androidx.databinding.DataBindingComponent = FragmentDataBindingComponent(this)
 
     lateinit var binding: AutoClearedValue<FragmentCreateProjectBinding>
 
