@@ -26,7 +26,7 @@ public class NavigationController {
 
     public void navigateToTasksList(String projectUUID, boolean popBackStack) {
         if (popBackStack) fragmentManager.popBackStack();
-        TasksListFragment tasksListFragment = TasksListFragment.create(projectUUID);
+        TasksListFragment tasksListFragment = TasksListFragment.Companion.create(projectUUID);
         fragmentManager.beginTransaction()
                 .replace(containerId, tasksListFragment)
                 .commit();

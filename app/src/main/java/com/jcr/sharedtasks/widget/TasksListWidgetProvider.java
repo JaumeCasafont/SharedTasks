@@ -22,7 +22,7 @@ public class TasksListWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        TasksListWidgetService.startActionUpdateIngredientsList(context);
+        TasksListWidgetService.Companion.startActionUpdateIngredientsList(context);
     }
 
     public static void updateIngredientsListWidgets(Context context, AppWidgetManager appWidgetManager,
