@@ -63,6 +63,12 @@ public class Task {
         this.isUploaded = task.isUploaded;
     }
 
+    @Ignore
+    public Task(String taskSID, String title) {
+        this.taskSID = taskSID;
+        this.title = title;
+    }
+
     @NonNull
     public String getTaskProjectUUID() {
         return taskProjectUUID;

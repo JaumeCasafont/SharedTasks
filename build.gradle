@@ -15,6 +15,7 @@ buildscript {
     ext.firebase_ui_version = "3.3.1"
     ext.timber_version = "4.7.1"
     ext.kotlin_version = '1.2.70'
+    ext.espresso_version = "3.1.0-alpha3"
 
     repositories {
         google()

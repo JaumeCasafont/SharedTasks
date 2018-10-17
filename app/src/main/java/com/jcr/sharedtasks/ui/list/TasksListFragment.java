@@ -86,6 +86,10 @@ public class TasksListFragment extends Fragment implements Injectable {
         adapter = new AutoClearedValue<>(this, tasksListAdapter);
 
         fillViews();
+        initWidget();
+    }
+
+    protected void initWidget() {
         TasksListWidgetService.startActionUpdateIngredientsList(getContext());
     }
 
