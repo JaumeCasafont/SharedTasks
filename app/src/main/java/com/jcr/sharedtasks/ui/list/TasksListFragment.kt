@@ -65,12 +65,17 @@ open class TasksListFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         tasksListViewModel = ViewModelProviders.of(this, viewModelFactory).get(TasksListViewModel::class.java)
-        val tasksListAdapter = TasksListAdapter(dataBindingComponent,
-                TasksListAdapter.OnTaskClickCallback { task ->
+        val tasksListAdapter = TasksListAdapter(
+                dataBindingComponent,
+                { task ->
                     navigationController.navigateToTaskDetail(task.getTaskSID())
                 },
-                TasksListAdapter.OnTaskClickCallback { tasksListViewModel.updateTaskStatus(it) },
-                TasksListAdapter.OnTaskClickCallback { tasksListViewModel.updateTaskAssignee(it) })
+                { task ->
+                    tasksListViewModel.updateTaskStatus(task)
+                },
+                { task ->
+                    tasksListViewModel.updateTaskAssignee(task)
+                })
 
         val args = arguments
         if (args!!.containsKey(PROJECT_UUID_KEY)) {
@@ -131,8 +136,8 @@ open class TasksListFragment : Fragment(), Injectable {
 
     private fun fillViews() {
         tasksListViewModel.projectReference.observe(this, Observer {
-                        setupActionBar(it?.getProjectName())
-                })
+            setupActionBar(it?.getProjectName())
+        })
 
         binding.get().addTask.setOnClickListener { v -> onNewTaskClick() }
         initRecyclerView()
