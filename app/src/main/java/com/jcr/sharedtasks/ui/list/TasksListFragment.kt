@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
+import com.jcr.sharedtasks.AppExecutors
 
 import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentDataBindingComponent
@@ -37,6 +38,9 @@ open class TasksListFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var navigationController: NavigationController
+
+    @Inject
+    lateinit var appExecutors: AppExecutors
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -67,6 +71,7 @@ open class TasksListFragment : Fragment(), Injectable {
         tasksListViewModel = ViewModelProviders.of(this, viewModelFactory).get(TasksListViewModel::class.java)
         val tasksListAdapter = TasksListAdapter(
                 dataBindingComponent,
+                appExecutors,
                 { task ->
                     navigationController.navigateToTaskDetail(task.getTaskSID())
                 },
@@ -151,9 +156,7 @@ open class TasksListFragment : Fragment(), Injectable {
     private fun initRecyclerView() {
         tasksListViewModel.tasks.observe(this, Observer { tasks ->
             if (tasks != null) {
-                binding.get().setVariable(projectTasksList, tasks)
-                adapter.get().replace(tasks)
-                binding.get().executePendingBindings()
+                adapter.get().submitList(tasks)
             }
         })
     }
