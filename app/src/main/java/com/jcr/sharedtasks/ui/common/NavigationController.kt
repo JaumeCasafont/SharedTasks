@@ -3,6 +3,7 @@ package com.jcr.sharedtasks.ui.common
 import androidx.fragment.app.FragmentManager
 
 import com.jcr.sharedtasks.R
+import com.jcr.sharedtasks.testing.OpenForTesting
 import com.jcr.sharedtasks.ui.MainActivity
 import com.jcr.sharedtasks.ui.createproject.CreateProjectFragment
 import com.jcr.sharedtasks.ui.list.TasksListFragment
@@ -10,6 +11,7 @@ import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment
 
 import javax.inject.Inject
 
+@OpenForTesting
 class NavigationController @Inject
 constructor(activity: MainActivity) {
     private val containerId: Int = R.id.container

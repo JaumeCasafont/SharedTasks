@@ -14,10 +14,7 @@ import com.jcr.sharedtasks.binding.FragmentBindingAdapters
 import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.testing.SingleFragmentActivity
-import com.jcr.sharedtasks.util.DataBindingIdlingResourceRule
-import com.jcr.sharedtasks.util.RecyclerViewMatcher
-import com.jcr.sharedtasks.util.TaskExecutorWithIdlingResourceRule
-import com.jcr.sharedtasks.util.ViewModelUtil
+import com.jcr.sharedtasks.util.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,6 +28,9 @@ class TasksListFragmentTest {
     @Rule
     @JvmField
     val executorRule = TaskExecutorWithIdlingResourceRule()
+    @Rule
+    @JvmField
+    val countingAppExecutors = CountingAppExecutorsRule()
     @Rule
     @JvmField
     val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule(activityRule)
@@ -55,6 +55,8 @@ class TasksListFragmentTest {
                 return mockBindingAdapter
             }
         }
+
+        tasksListFragment.appExecutors = countingAppExecutors.appExecutors
         activityRule.activity.setFragment(tasksListFragment)
     }
 

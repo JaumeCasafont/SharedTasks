@@ -20,6 +20,7 @@ import com.jcr.sharedtasks.databinding.TaskDetailFragmentBinding
 import com.jcr.sharedtasks.di.Injectable
 import com.jcr.sharedtasks.util.AutoClearedValue
 import com.jcr.sharedtasks.util.TimeUtils
+import com.jcr.sharedtasks.util.autoCleared
 import javax.inject.Inject
 
 class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetListener {
@@ -29,7 +30,7 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    lateinit var binding: AutoClearedValue<TaskDetailFragmentBinding>
+    var binding by autoCleared<TaskDetailFragmentBinding>()
 
     lateinit var taskDetailViewModel: TaskDetailViewModel
 
@@ -44,9 +45,10 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
         val dataBinding = DataBindingUtil
                 .inflate<TaskDetailFragmentBinding>(inflater, R.layout.task_detail_fragment, container, false,
                         dataBindingComponent)
-        binding = AutoClearedValue(this, dataBinding)
 
-        return binding.get().root
+        binding = dataBinding
+
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -99,18 +101,18 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
 
     private fun fillViews() {
         taskDetailViewModel.task.observe(this, Observer {
-                binding.get().task = taskDetailViewModel.getTaskToUpload()
+                binding.task = taskDetailViewModel.getTaskToUpload()
         })
-        binding.get().priority.setOnClickListener { onPriorityClick() }
-        binding.get().userName.setOnClickListener { onAssigneeClick() }
-        binding.get().taskDueDate.setOnClickListener { onDateClick() }
+        binding.priority.setOnClickListener { onPriorityClick() }
+        binding.userName.setOnClickListener { onAssigneeClick() }
+        binding.taskDueDate.setOnClickListener { onDateClick() }
     }
 
     private fun onSaveClick(): Boolean {
-        val title = binding.get().taskTitleEt.text.toString()
+        val title = binding.taskTitleEt.text.toString()
         if (!title.isEmpty()) {
             taskDetailViewModel.saveTask(
-                    title, binding.get().taskDescriptionEt.text.toString())
+                    title, binding.taskDescriptionEt.text.toString())
             return true
         } else {
             Toast.makeText(context, getString(R.string.task_title_empty_error), Toast.LENGTH_LONG).show()
@@ -124,12 +126,12 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
         val nextAssignee = taskDetailViewModel.updateAssignee(
                 sharedPreferences.getString("userName", " "))
 
-        binding.get().userName.text = nextAssignee ?: getString(R.string.assign_task)
+        binding.userName.text = nextAssignee ?: getString(R.string.assign_task)
     }
 
     fun onPriorityClick() {
         val priority = taskDetailViewModel.updatePriority()
-        binding.get().priority.text = if (priority)
+        binding.priority.text = if (priority)
             getString(R.string.task_high_priority)
         else
             getString(R.string.task_no_priority)
@@ -138,7 +140,7 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
             R.drawable.ic_flag_high_priority
         else
             R.drawable.ic_flag_no_priority)
-        binding.get().priority.setCompoundDrawablesWithIntrinsicBounds(priorityIcon, null, null, null)
+        binding.priority.setCompoundDrawablesWithIntrinsicBounds(priorityIcon, null, null, null)
     }
 
     fun onDateClick() {
@@ -149,13 +151,13 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
         taskDetailViewModel.updateDate(TimeUtils.getDateInMillis(year, month, dayOfMonth))
-        binding.get().taskDueDate.text = TimeUtils.getDateFormatted(year, month, dayOfMonth)
+        binding.taskDueDate.text = TimeUtils.getDateFormatted(year, month, dayOfMonth)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        taskDetailViewModel.updateTitle(binding.get().taskTitleEt.text.toString())
-        taskDetailViewModel.updateDescription(binding.get().taskDescriptionEt.text.toString())
+        taskDetailViewModel.updateTitle(binding.taskTitleEt.text.toString())
+        taskDetailViewModel.updateDescription(binding.taskDescriptionEt.text.toString())
     }
 
     companion object {

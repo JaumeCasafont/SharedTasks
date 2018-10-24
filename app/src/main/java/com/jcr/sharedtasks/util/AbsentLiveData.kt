@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package com.jcr.sharedtasks.util;
+package com.jcr.sharedtasks.util
 
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveData
 
 /**
- * A LiveData class that has {@code null} value.
+ * A LiveData class that has `null` value.
  */
-public class AbsentLiveData extends LiveData {
-    private AbsentLiveData() {
-        postValue(null);
+class AbsentLiveData<T : Any?> private constructor() : LiveData<T>() {
+    init {
+        postValue(null)
     }
-    public static <T> LiveData<T> create() {
-        //noinspection unchecked
-        return new AbsentLiveData();
+
+    companion object {
+        fun <T> create(): LiveData<T> {
+
+            return AbsentLiveData()
+        }
     }
 }

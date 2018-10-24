@@ -1,35 +1,26 @@
 package com.jcr.sharedtasks.ui.list
 
 import android.app.Activity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.os.Bundle
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.jcr.sharedtasks.AppExecutors
-
 import com.jcr.sharedtasks.R
 import com.jcr.sharedtasks.binding.FragmentDataBindingComponent
 import com.jcr.sharedtasks.databinding.TasksListFragmentBinding
 import com.jcr.sharedtasks.di.Injectable
 import com.jcr.sharedtasks.ui.common.NavigationController
-import com.jcr.sharedtasks.util.AutoClearedValue
+import com.jcr.sharedtasks.util.autoCleared
 import com.jcr.sharedtasks.widget.TasksListWidgetService
-
 import javax.inject.Inject
-
-import com.jcr.sharedtasks.BR.projectTasksList
 
 open class TasksListFragment : Fragment(), Injectable {
 
@@ -44,9 +35,9 @@ open class TasksListFragment : Fragment(), Injectable {
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    lateinit var binding: AutoClearedValue<TasksListFragmentBinding>
+    var binding by autoCleared<TasksListFragmentBinding>()
 
-    lateinit var adapter: AutoClearedValue<TasksListAdapter>
+    var adapter by autoCleared<TasksListAdapter>()
 
     lateinit var tasksListViewModel: TasksListViewModel
 
@@ -61,7 +52,8 @@ open class TasksListFragment : Fragment(), Injectable {
         val dataBinding = DataBindingUtil
                 .inflate<TasksListFragmentBinding>(inflater, R.layout.tasks_list_fragment, container, false,
                         dataBindingComponent)
-        binding = AutoClearedValue(this, dataBinding)
+
+        binding = dataBinding
 
         return dataBinding.root
     }
@@ -87,8 +79,8 @@ open class TasksListFragment : Fragment(), Injectable {
             tasksListViewModel.setProjectUUID(args.getString(PROJECT_UUID_KEY))
         }
 
-        binding.get().tasksListRv.adapter = tasksListAdapter
-        adapter = AutoClearedValue(this, tasksListAdapter)
+        binding.tasksListRv.adapter = tasksListAdapter
+        adapter = tasksListAdapter
 
         fillViews()
         initWidget()
@@ -144,7 +136,7 @@ open class TasksListFragment : Fragment(), Injectable {
             setupActionBar(it?.getProjectName())
         })
 
-        binding.get().addTask.setOnClickListener { v -> onNewTaskClick() }
+        binding.addTask.setOnClickListener { v -> onNewTaskClick() }
         initRecyclerView()
     }
 
@@ -156,7 +148,7 @@ open class TasksListFragment : Fragment(), Injectable {
     private fun initRecyclerView() {
         tasksListViewModel.tasks.observe(this, Observer { tasks ->
             if (tasks != null) {
-                adapter.get().submitList(tasks)
+                adapter.submitList(tasks)
             }
         })
     }

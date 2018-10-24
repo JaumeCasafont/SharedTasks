@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 
 import com.jcr.sharedtasks.model.Project
 import com.jcr.sharedtasks.repository.ProjectsRepository
+import com.jcr.sharedtasks.testing.OpenForTesting
 
 import java.util.UUID
 
 import javax.inject.Inject
 
+@OpenForTesting
 class CreateProjectViewModel @Inject
 constructor(private val repository: ProjectsRepository) : ViewModel() {
 

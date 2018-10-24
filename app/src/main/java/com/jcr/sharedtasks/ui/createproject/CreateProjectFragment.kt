@@ -20,6 +20,7 @@ import com.jcr.sharedtasks.databinding.FragmentCreateProjectBinding
 import com.jcr.sharedtasks.di.Injectable
 import com.jcr.sharedtasks.ui.common.NavigationController
 import com.jcr.sharedtasks.util.AutoClearedValue
+import com.jcr.sharedtasks.util.autoCleared
 
 import javax.inject.Inject
 
@@ -33,7 +34,7 @@ class CreateProjectFragment : Fragment(), Injectable {
 
     var dataBindingComponent: androidx.databinding.DataBindingComponent = FragmentDataBindingComponent(this)
 
-    lateinit var binding: AutoClearedValue<FragmentCreateProjectBinding>
+    var binding by autoCleared<FragmentCreateProjectBinding>()
 
     lateinit var createProjectViewModel: CreateProjectViewModel
 
@@ -42,7 +43,8 @@ class CreateProjectFragment : Fragment(), Injectable {
         val dataBinding = DataBindingUtil
                 .inflate<FragmentCreateProjectBinding>(inflater, R.layout.fragment_create_project, container, false,
                         dataBindingComponent)
-        binding = AutoClearedValue(this, dataBinding)
+
+        binding = dataBinding
 
         return dataBinding.root
     }
@@ -57,9 +59,9 @@ class CreateProjectFragment : Fragment(), Injectable {
     }
 
     private fun initViews() {
-        binding.get().createProjectBtn.setOnClickListener { v ->
+        binding.createProjectBtn.setOnClickListener { v ->
             if (checkInternetConnection()) {
-                val projectName = binding.get().projectNameEt.text.toString()
+                val projectName = binding.projectNameEt.text.toString()
                 val newProjectUUID = createProjectViewModel.createProject(projectName)
                 if (newProjectUUID != null) {
                     navigationController.navigateToTasksList(newProjectUUID, true)
