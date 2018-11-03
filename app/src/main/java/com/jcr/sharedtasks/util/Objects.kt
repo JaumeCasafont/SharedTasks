@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.jcr.sharedtasks.util;
+package com.jcr.sharedtasks.util
 
-public class Objects {
-    public static boolean equals(Object o1, Object o2) {
+object Objects {
+    fun equals(o1: Any?, o2: Any?): Boolean {
         if (o1 == null) {
-            return o2 == null;
+            return o2 == null
         }
-        if (o2 == null) {
-            return false;
-        }
-        return o1.equals(o2);
+        return if (o2 == null) {
+            false
+        } else o1 == o2
     }
 }

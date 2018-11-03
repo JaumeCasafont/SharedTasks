@@ -26,7 +26,7 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
         get() {
             val currentTask = task.value
             return if (currentTask == null || currentTask.getDate() == 0L) {
-                TimeUtils.getNow()
+                TimeUtils.now
             } else {
                 TimeUtils.getDateToCalendar(currentTask.getDate())
             }

@@ -42,7 +42,7 @@ public class FragmentBindingAdapters {
         if (timeInMillis == 0) {
             textView.setText(fragment.getString(R.string.task_date_empty));
         } else {
-            textView.setText(TimeUtils.getDateFormatted(timeInMillis));
+            textView.setText(TimeUtils.INSTANCE.getDateFormatted(timeInMillis));
         }
     }
 
@@ -51,7 +51,7 @@ public class FragmentBindingAdapters {
         if (timeInMillis == 0) {
             textView.setVisibility(View.INVISIBLE);
         } else {
-            textView.setText(TimeUtils.getDateFormatted(timeInMillis));
+            textView.setText(TimeUtils.INSTANCE.getDateFormatted(timeInMillis));
         }
     }
 }
