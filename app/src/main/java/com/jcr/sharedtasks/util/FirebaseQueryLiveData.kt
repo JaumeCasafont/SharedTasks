@@ -13,7 +13,10 @@ import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 
 
-class FirebaseQueryLiveData(dbReference: DatabaseReference) : LiveData<DataSnapshot>() {
+class FirebaseQueryLiveData(
+        dbReference: DatabaseReference,
+        private var dataType: Class<*>
+) : LiveData<Any>() {
 
     private val query = dbReference
     private val valueListener = mValueEventListener()
@@ -45,7 +48,7 @@ class FirebaseQueryLiveData(dbReference: DatabaseReference) : LiveData<DataSnaps
     private inner class mValueEventListener : ValueEventListener {
 
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            value = dataSnapshot
+            value = dataSnapshot.getValue(dataType)
         }
 
         override fun onCancelled(databaseError: DatabaseError) {

@@ -8,7 +8,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 
-class FirebaseChildQueryLiveData(dbReference: DatabaseReference) : LiveData<DataSnapshot>() {
+class FirebaseChildQueryLiveData(
+        dbReference: DatabaseReference,
+        private var dataType: Class<*>
+) : LiveData<Any>() {
 
     private val query = dbReference
     private val childListener = MyEventListener()
@@ -37,7 +40,7 @@ class FirebaseChildQueryLiveData(dbReference: DatabaseReference) : LiveData<Data
     private inner class MyEventListener : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-            value = dataSnapshot
+            value = dataSnapshot.getValue(dataType)
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}

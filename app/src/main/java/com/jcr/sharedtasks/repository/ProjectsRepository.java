@@ -2,21 +2,15 @@ package com.jcr.sharedtasks.repository;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
-import android.content.SharedPreferences;
-import androidx.annotation.Nullable;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import android.content.SharedPreferences;
+
 import com.jcr.sharedtasks.AppExecutors;
+import com.jcr.sharedtasks.api.ApiClient;
 import com.jcr.sharedtasks.db.ProjectsDao;
-import com.jcr.sharedtasks.db.SharedTasksDb;
 import com.jcr.sharedtasks.model.Project;
 import com.jcr.sharedtasks.model.ProjectReference;
 import com.jcr.sharedtasks.model.Task;
-import com.jcr.sharedtasks.util.FirebaseChildQueryLiveData;
-import com.jcr.sharedtasks.util.FirebaseQueryLiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +20,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ProjectsRepository {
-    private final DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference();
-    private final SharedTasksDb db;
+    private final ApiClient apiClient;
     private final ProjectsDao projectsDao;
     private final AppExecutors appExecutors;
     private final SharedPreferences sharedPreferences;
@@ -37,12 +30,12 @@ public class ProjectsRepository {
     private int lastRemotePosition;
 
     @Inject
-    public ProjectsRepository(AppExecutors appExecutors, SharedTasksDb db, ProjectsDao projectsDao,
-                              SharedPreferences sharedPreferences) {
-        this.db = db;
+    public ProjectsRepository(AppExecutors appExecutors, ProjectsDao projectsDao,
+                              SharedPreferences sharedPreferences, ApiClient apiClient) {
         this.projectsDao = projectsDao;
         this.appExecutors = appExecutors;
         this.sharedPreferences = sharedPreferences;
+        this.apiClient = apiClient;
 
         projectReferencesCache = new ArrayList<>();
     }
@@ -60,12 +53,12 @@ public class ProjectsRepository {
     public void createProjectReference(ProjectReference projectReference) {
         String userUid = sharedPreferences.getString("userUid", "");
         if (projectReferencePosition(projectReference) == -1) {
-            dataRef.child(userUid).push().setValue(projectReference);
+            apiClient.postValue(userUid, projectReference);
         }
     }
 
     public void createProject(Project project) {
-        dataRef.child(project.getProjectUUID()).setValue(project);
+        apiClient.postValue(project.getProjectUUID(), project);
 
         ProjectReference projectReference = new ProjectReference(project.getProjectUUID(), project.getName());
         createProjectReference(projectReference);
@@ -75,12 +68,12 @@ public class ProjectsRepository {
         String userUid = sharedPreferences.getString("userUid", "");
         MediatorLiveData<List<ProjectReference>> result = new MediatorLiveData<>();
         LiveData<List<ProjectReference>> dbSource = projectsDao.loadProjectsReferences();
-        FirebaseChildQueryLiveData networkSource = new FirebaseChildQueryLiveData(dataRef.child(userUid));
+        LiveData<ProjectReference> networkSource = apiClient.getProjectReferences(userUid);
 
         result.addSource(dbSource, result::setValue);
 
         result.addSource(networkSource, dataSnapshot -> {
-            ProjectReference projectReference = deserializeProjectReference(dataSnapshot);
+            ProjectReference projectReference = saveInCache(dataSnapshot);
             if (projectReference != null) {
                 result.setValue(projectReferencesCache);
                 appExecutors.diskIO().execute(() -> projectsDao.insertProjectsReference(projectReference));
@@ -103,12 +96,12 @@ public class ProjectsRepository {
         sharedPreferences.edit().putString("lastLoadedProject", projectUUID).apply();
         MediatorLiveData<List<Task>> result = new MediatorLiveData<>();
         LiveData<List<Task>> dbSource = projectsDao.loadTasks(projectUUID);
-        FirebaseQueryLiveData networkSource = new FirebaseQueryLiveData(dataRef.child(projectUUID));
+        LiveData<Project> networkSource = apiClient.getProject(projectUUID);
 
         result.addSource(dbSource, result::setValue);
 
-        result.addSource(networkSource, dataSnapshot -> {
-            List<Task> tasks = deserializeProjectTasks(dataSnapshot);
+        result.addSource(networkSource, project -> {
+            List<Task> tasks = getProjectTasks(project);
             if (tasks != null) {
                 result.setValue(tasks);
                 appExecutors.diskIO().execute(() -> projectsDao.insertTasks(tasks));
@@ -162,12 +155,12 @@ public class ProjectsRepository {
     }
 
     private void uploadTask(Task task) {
-        dataRef.child(task.getTaskProjectUUID() + "/tasks/" + String.valueOf(task.getRemotePosition()))
-                .setValue(task);
+        apiClient.putValue(
+                task.getTaskProjectUUID() + "/tasks/" + String.valueOf(task.getRemotePosition()),
+                task);
     }
 
-    private ProjectReference deserializeProjectReference(DataSnapshot dataSnapshot) {
-        ProjectReference projectReference = dataSnapshot.getValue(ProjectReference.class);
+    private ProjectReference saveInCache(ProjectReference projectReference) {
         if (projectReference != null && projectReference.getProjectUUID() != null) {
             int position = projectReferencePosition(projectReference);
             if (position == -1) {
@@ -190,8 +183,7 @@ public class ProjectsRepository {
         return -1;
     }
 
-    private List<Task> deserializeProjectTasks(DataSnapshot dataSnapshot) {
-        Project project = dataSnapshot.getValue(Project.class);
+    private List<Task> getProjectTasks(Project project) {
         if (project == null) return null;
         syncTasksDataWithServer(project);
         return project.getTasks();

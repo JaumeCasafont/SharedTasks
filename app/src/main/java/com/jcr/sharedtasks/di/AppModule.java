@@ -21,6 +21,9 @@ import androidx.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.jcr.sharedtasks.api.ApiClient;
 import com.jcr.sharedtasks.db.ProjectsDao;
 import com.jcr.sharedtasks.db.SharedTasksDb;
 
@@ -45,5 +48,15 @@ class AppModule {
     @Singleton @Provides
     SharedPreferences providePreferences(Application app) {
         return app.getSharedPreferences("com.jcr.sharedtasks", Context.MODE_PRIVATE);
+    }
+
+    @Singleton @Provides
+    ApiClient provideApiClient() {
+        return new ApiClient(provideFirebaseDatabase());
+    }
+
+    @Singleton @Provides
+    DatabaseReference provideFirebaseDatabase() {
+        return FirebaseDatabase.getInstance().getReference();
     }
 }

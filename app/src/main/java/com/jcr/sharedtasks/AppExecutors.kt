@@ -18,6 +18,7 @@ package com.jcr.sharedtasks
 
 import android.os.Handler
 import android.os.Looper
+import com.jcr.sharedtasks.testing.OpenForTesting
 
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -33,6 +34,7 @@ import javax.inject.Singleton
  * webservice requests).
  */
 @Singleton
+@OpenForTesting
 class AppExecutors(
         private val diskIO: Executor,
         private val networkIO: Executor,
