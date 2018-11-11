@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.annotation.VisibleForTesting
 
 import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.model.Task
@@ -52,7 +51,7 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
     }
 
     fun updateTaskStatus(task: Task) {
-        this.repository.updateTaskStatus(task)
+        this.repository.updateTaskState(task)
     }
 
     fun updateTaskAssignee(task: Task) {

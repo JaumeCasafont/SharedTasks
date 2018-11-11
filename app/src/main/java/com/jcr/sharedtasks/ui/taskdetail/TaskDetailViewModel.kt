@@ -52,13 +52,13 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
         }
     }
 
-    fun getTaskToUpload(): Task? {
+    fun getTaskToUpload(): Task {
         if (taskToUpload == null) {
             taskToUpload = Task(task.value!!)
         }
         priority = taskToUpload!!.hasPriority()
         assignee = taskToUpload?.getAssignee()
-        return taskToUpload
+        return taskToUpload!!
     }
 
     fun updateAssignee(assignee: String): String? {
@@ -92,6 +92,6 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
     fun saveTask(title: String, description: String) {
         taskToUpload?.setTitle(title)
         taskToUpload?.setDescription(description)
-        repository.sendTask(taskToUpload)
+        repository.sendTask(taskToUpload!!)
     }
 }

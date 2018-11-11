@@ -10,12 +10,15 @@ import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.util.InstantAppExecutors
 import com.jcr.sharedtasks.util.TestUtil
+import com.jcr.sharedtasks.util.capture
 import com.jcr.sharedtasks.util.mock
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
@@ -29,11 +32,15 @@ class ProjectsRepositoryTest {
     private var projectsDao = Mockito.mock(ProjectsDao::class.java)
     private var sharedPreferences = Mockito.mock(SharedPreferences::class.java)
     private var apiClient = Mockito.mock(ApiClient::class.java)
+
+    private var taskCaptor = ArgumentCaptor.forClass(Task::class.java) as ArgumentCaptor<Task>
+
     private lateinit var projectsRepository: ProjectsRepository
 
     @Before
     fun init() {
-        Mockito.`when`(sharedPreferences.getString("userUid", "")).thenReturn("userUid")
+        `when`(sharedPreferences.getString("userUid", "")).thenReturn("userUid")
+        `when`(sharedPreferences.getString("userName", " ")).thenReturn("userName")
         val editor = Mockito.mock(SharedPreferences.Editor::class.java)
         `when`(editor.putString("lastLoadedProject", "projectUUID")).thenReturn(editor)
         `when`(sharedPreferences.edit()).thenReturn(editor)
@@ -95,5 +102,31 @@ class ProjectsRepositoryTest {
         projectData.value = project
 
         verify(projectsDao).insertTasks(tasks)
+    }
+
+    @Test
+    fun updateAssigneeTest() {
+        val task = Task("taskSID", "taskName")
+        task.assignee = "another user"
+        task.taskProjectUUID = "projectUUID"
+        task.remotePosition = 0
+        projectsRepository.updateTaskAssignee(task)
+
+        verify(projectsDao).insertTask(capture(taskCaptor))
+        verify(apiClient).putValue("projectUUID/tasks/0", taskCaptor.value)
+        assertEquals("userName", taskCaptor.value.assignee)
+    }
+
+    @Test
+    fun updateTaskStatusTest() {
+        val task = Task("taskSID", "taskName")
+        task.state = 0
+        task.taskProjectUUID = "projectUUID"
+        task.remotePosition = 1
+        projectsRepository.updateTaskState(task)
+
+        verify(projectsDao).insertTask(capture(taskCaptor))
+        verify(apiClient).putValue("projectUUID/tasks/1", taskCaptor.value)
+        assertEquals(1, taskCaptor.value.state)
     }
 }

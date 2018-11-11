@@ -69,7 +69,6 @@ public class Task {
         this.title = title;
     }
 
-    @NonNull
     public String getTaskProjectUUID() {
         return taskProjectUUID;
     }
