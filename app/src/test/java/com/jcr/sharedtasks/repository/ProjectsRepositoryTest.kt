@@ -44,6 +44,10 @@ class ProjectsRepositoryTest {
         val editor = Mockito.mock(SharedPreferences.Editor::class.java)
         `when`(editor.putString("lastLoadedProject", "projectUUID")).thenReturn(editor)
         `when`(sharedPreferences.edit()).thenReturn(editor)
+
+        val dbData = MutableLiveData<ProjectReference>()
+        `when`(projectsDao.loadProjectReferenceById("projectUUID")).thenReturn(dbData)
+
         projectsRepository = ProjectsRepository(InstantAppExecutors(), projectsDao, sharedPreferences, apiClient)
     }
 
@@ -106,7 +110,7 @@ class ProjectsRepositoryTest {
 
     @Test
     fun updateAssigneeTest() {
-        val task = Task("taskSID", "taskName")
+        val task = Task("taskProjectUUID", "taskSID", "taskName")
         task.assignee = "another user"
         task.taskProjectUUID = "projectUUID"
         task.remotePosition = 0
@@ -119,10 +123,11 @@ class ProjectsRepositoryTest {
 
     @Test
     fun updateTaskStatusTest() {
-        val task = Task("taskSID", "taskName")
+        val task = Task("taskProjectUUID", "taskSID", "taskName")
         task.state = 0
         task.taskProjectUUID = "projectUUID"
         task.remotePosition = 1
+        task.isUploaded = true
         projectsRepository.updateTaskState(task)
 
         verify(projectsDao).insertTask(capture(taskCaptor))

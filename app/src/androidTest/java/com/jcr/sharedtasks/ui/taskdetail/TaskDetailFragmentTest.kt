@@ -59,7 +59,7 @@ class TaskDetailFragmentTest {
 
     @Test
     fun showTaskTitleAndDescriptionWhenIsLoaded() {
-        val task = Task("taskSID", 1L, "task_title",
+        val task = Task("taskProjectUUID", "taskSID", 1L, "task_title",
                 "assignee", "description",
                 0, false, 0, true)
         `when`(viewModel.getTaskToUpload()).thenReturn(task)

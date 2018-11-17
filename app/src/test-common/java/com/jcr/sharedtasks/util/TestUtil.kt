@@ -6,7 +6,7 @@ object TestUtil {
 
     fun createTasks(count: Int): List<Task> {
         return (0 until count).map {
-            Task("taskSID$it", "taskName$it")
+            Task("taskUUID$it", "taskSID$it", "taskName$it")
         }
     }
 }

@@ -27,13 +27,13 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     private val projectReferencesCache: MutableList<ProjectReference>
     private var currentReference: ProjectReference? = null
-    private var lastRemotePosition: Int = 0
+    private var lastRemotePosition: Int = -1
 
     val currentProjectUUID: String
-        get() = if (currentReference == null) "" else currentReference!!.getProjectUUID()
+        get() = if (currentReference == null) "" else currentReference!!.projectUUID
 
     val currentProjectName: String
-        get() = if (currentReference == null) "" else currentReference!!.getProjectName()
+        get() = if (currentReference == null) "" else currentReference!!.projectName
 
     val projectsReferences: LiveData<List<ProjectReference>>
         get() {
@@ -113,8 +113,8 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     fun updateTaskState(task: Task) {
         val updatedStatusTask = Task(task)
-        updatedStatusTask.setState(updatedStatusTask.getState() + 1)
-        if (updatedStatusTask.getState() <= 2) {
+        updatedStatusTask.state = updatedStatusTask.state + 1
+        if (updatedStatusTask.state <= 2) {
             sendTask(updatedStatusTask)
         }
     }
@@ -122,16 +122,15 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
     fun updateTaskAssignee(task: Task) {
         val updatedAssigneeTask = Task(task)
         val assignee = sharedPreferences.getString("userName", " ")
-        if (assignee != updatedAssigneeTask.getAssignee()) {
-            updatedAssigneeTask.setAssignee(assignee)
+        if (assignee != updatedAssigneeTask.assignee) {
+            updatedAssigneeTask.assignee = assignee
             sendTask(updatedAssigneeTask)
         }
     }
 
     fun sendTask(task: Task) {
-        if (task.getTaskProjectUUID() == null) {
-            task.setTaskProjectUUID(currentReference!!.getProjectUUID())
-            task.setRemotePosition(lastRemotePosition + 1)
+        if (!task.isUploaded) {
+            task.remotePosition = lastRemotePosition + 1
         }
         saveTask(task)
         uploadTask(task)
@@ -147,12 +146,12 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     private fun uploadTask(task: Task) {
         apiClient.putValue(
-                task.getTaskProjectUUID() + "/tasks/" + task.getRemotePosition().toString(),
+                task.taskProjectUUID + "/tasks/" + task.remotePosition.toString(),
                 task)
     }
 
     private fun saveInCache(projectReference: ProjectReference?): ProjectReference? {
-        if (projectReference?.getProjectUUID() != null) {
+        if (projectReference?.projectUUID != null) {
             val position = projectReferencePosition(projectReference)
             if (position == -1) {
                 projectReferencesCache.add(projectReference)
@@ -167,7 +166,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
     private fun projectReferencePosition(projectReference: ProjectReference): Int {
         if (projectReferencesCache.size == 0) return -1
         for (i in projectReferencesCache.indices) {
-            if (projectReferencesCache[i].getProjectUUID() == projectReference.getProjectUUID()) {
+            if (projectReferencesCache[i].projectUUID == projectReference.projectUUID) {
                 return i
             }
         }
@@ -181,12 +180,12 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
     }
 
     private fun syncTasksDataWithServer(project: Project) {
-        if (project.tasks == null || project.tasks.isEmpty()) {
+        if (project.tasks == null || project.tasks?.isEmpty()!!) {
             lastRemotePosition = -1
         } else {
-            for (i in 0 until project.tasks.size) {
-                project.tasks[i].setRemotePosition(i)
-                project.tasks[i].setUploaded(true)
+            for (i in 0 until project.tasks?.size!!) {
+                project.tasks?.get(i)!!.remotePosition = i
+                project.tasks?.get(i)!!.isUploaded = true
                 lastRemotePosition = i
             }
         }

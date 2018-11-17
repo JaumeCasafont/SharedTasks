@@ -46,6 +46,6 @@ constructor(private val signInRepository: SignInRepository, private val projects
     fun parseDeeplink(data: Uri): String {
         val invitedProjectReference = DeepLinkUtils.parseProjectUUID(data)
         projectsRepository.createProjectReference(invitedProjectReference)
-        return invitedProjectReference.getProjectUUID()
+        return invitedProjectReference.projectUUID
     }
 }

@@ -13,6 +13,6 @@ object DeepLinkUtils {
         val splitDeepLink = deepLinkPath?.split("/".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray()
         val projectName = splitDeepLink?.get(1)
         val projectUUID = splitDeepLink?.get(2)
-        return ProjectReference(projectUUID, projectName?.replace("&", " "))
+        return ProjectReference(projectUUID!!, projectName?.replace("&", " ")!!)
     }
 }

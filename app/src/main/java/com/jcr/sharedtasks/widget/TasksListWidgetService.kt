@@ -73,7 +73,7 @@ class TasksListWidgetService : IntentService("IngredientsListService") {
 
                     val stringBuilder = StringBuilder()
                     for (task in tasks) {
-                        stringBuilder.append("· ").append(task.getTitle()).append("\n")
+                        stringBuilder.append("· ").append(task.title).append("\n")
                     }
                     TasksListWidgetProvider.updateIngredientsListWidgets(
                             this@TasksListWidgetService,

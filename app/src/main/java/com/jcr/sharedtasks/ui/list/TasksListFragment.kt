@@ -65,7 +65,7 @@ open class TasksListFragment : Fragment(), Injectable {
                 dataBindingComponent,
                 appExecutors,
                 { task ->
-                    navigationController.navigateToTaskDetail(task.getTaskSID())
+                    navigationController.navigateToTaskDetail(task.taskSID)
                 },
                 { task ->
                     tasksListViewModel.updateTaskStatus(task)
@@ -133,7 +133,7 @@ open class TasksListFragment : Fragment(), Injectable {
 
     private fun fillViews() {
         tasksListViewModel.projectReference.observe(this, Observer {
-            setupActionBar(it?.getProjectName())
+            setupActionBar(it?.projectName)
         })
 
         binding.addTask.setOnClickListener { v -> onNewTaskClick() }

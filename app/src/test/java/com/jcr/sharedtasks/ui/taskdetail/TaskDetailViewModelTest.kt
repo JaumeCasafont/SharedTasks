@@ -5,6 +5,7 @@ import com.jcr.sharedtasks.repository.ProjectsRepository
 import com.jcr.sharedtasks.util.mock
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +21,11 @@ class TaskDetailViewModelTest {
 
     private val repository = mock(ProjectsRepository::class.java)
     private var taskDetailViewModel = TaskDetailViewModel(repository)
+
+    @Before
+    fun init() {
+        `when`(repository.currentProjectUUID).thenReturn("projectUUID")
+    }
 
     @Test
     fun givenATaskSIDThenLoadsIt() {
@@ -53,9 +59,9 @@ class TaskDetailViewModelTest {
         taskDetailViewModel.updateDate(1000L)
 
         val taskToUpload = taskDetailViewModel.getTaskToUpload()
-        assertThat(taskToUpload?.getTitle(), `is`("title"))
-        assertThat(taskToUpload?.getDescription(), `is`("description"))
-        assertThat(taskToUpload?.hasPriority(), `is`(true))
-        assertThat(taskToUpload?.getDate(), `is`(1000L))
+        assertThat(taskToUpload.title, `is`("title"))
+        assertThat(taskToUpload.description, `is`("description"))
+        assertThat(taskToUpload.hasPriority, `is`(true))
+        assertThat(taskToUpload.date, `is`(1000L))
     }
 }

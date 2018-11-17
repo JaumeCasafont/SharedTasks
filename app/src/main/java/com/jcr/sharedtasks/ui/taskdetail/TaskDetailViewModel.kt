@@ -25,10 +25,10 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
     val dateToShowInCalendar: Array<Int>
         get() {
             val currentTask = task.value
-            return if (currentTask == null || currentTask.getDate() == 0L) {
+            return if (currentTask == null || currentTask.date == 0L) {
                 TimeUtils.now
             } else {
-                TimeUtils.getDateToCalendar(currentTask.getDate())
+                TimeUtils.getDateToCalendar(currentTask.date)
             }
         }
 
@@ -46,7 +46,7 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
             return
         }
         if (taskSID == null) {
-            taskToUpload = Task(UUID.randomUUID().toString())
+            taskToUpload = Task(repository.currentProjectUUID, UUID.randomUUID().toString())
         } else {
             this.taskSID.setValue(taskSID)
         }
@@ -56,8 +56,8 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
         if (taskToUpload == null) {
             taskToUpload = Task(task.value!!)
         }
-        priority = taskToUpload!!.hasPriority()
-        assignee = taskToUpload?.getAssignee()
+        priority = taskToUpload?.hasPriority!!
+        assignee = taskToUpload?.assignee
         return taskToUpload!!
     }
 
@@ -67,31 +67,31 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
         } else {
             this.assignee = if (this.assignee != assignee) assignee else null
         }
-        taskToUpload?.setAssignee(this.assignee)
+        taskToUpload?.assignee = this.assignee
         return this.assignee
     }
 
     fun updatePriority(): Boolean {
         priority = !priority
-        taskToUpload?.setHasPriority(priority)
+        taskToUpload?.hasPriority = priority
         return priority
     }
 
     fun updateDate(date: Long) {
-        taskToUpload?.setDate(date)
+        taskToUpload?.date = date
     }
 
     fun updateTitle(title: String) {
-        taskToUpload?.setTitle(title)
+        taskToUpload?.title = title
     }
 
     fun updateDescription(description: String) {
-        taskToUpload?.setDescription(description)
+        taskToUpload?.description = description
     }
 
     fun saveTask(title: String, description: String) {
-        taskToUpload?.setTitle(title)
-        taskToUpload?.setDescription(description)
+        taskToUpload?.title = title
+        taskToUpload?.description = description
         repository.sendTask(taskToUpload!!)
     }
 }

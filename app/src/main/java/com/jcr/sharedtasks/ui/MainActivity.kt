@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun navigateToFragment(position: Int) {
         if (projectReferences != null && !projectReferences!!.isEmpty()) {
-            val projectUUID = projectReferences!![position].getProjectUUID()
+            val projectUUID = projectReferences!![position].projectUUID
             navigationController.navigateToTasksList(projectUUID)
         }
     }
