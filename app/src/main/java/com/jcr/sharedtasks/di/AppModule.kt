@@ -33,7 +33,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module(includes = [ViewModelModule::class])
-internal class AppModule {
+class AppModule {
 
     @Singleton
     @Provides

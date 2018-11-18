@@ -39,12 +39,7 @@ class SharedTasksApp : Application(), HasActivityInjector, HasServiceInjector {
         AppInjector.init(this)
     }
 
-    override fun activityInjector(): DispatchingAndroidInjector<Activity>? {
-        return dispatchingAndroidInjector
-    }
+    override fun activityInjector() = dispatchingAndroidInjector
 
-    override fun serviceInjector(): AndroidInjector<Service>? {
-        return dispatchingServiceInjector
-    }
-
+    override fun serviceInjector() = dispatchingServiceInjector
 }

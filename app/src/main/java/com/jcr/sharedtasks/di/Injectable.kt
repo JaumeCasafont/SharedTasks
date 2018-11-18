@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.jcr.sharedtasks.di;
+package com.jcr.sharedtasks.di
 
-import com.jcr.sharedtasks.ui.MainActivity;
-
-import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
-
-@Module
-public abstract class MainActivityModule {
-    @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
-    abstract MainActivity contributeMainActivity();
-}
+/**
+ * Marks an activity / fragment injectable.
+ */
+interface Injectable

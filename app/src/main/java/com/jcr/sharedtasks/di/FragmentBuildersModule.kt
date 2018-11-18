@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.jcr.sharedtasks.di;
+package com.jcr.sharedtasks.di
 
-import com.jcr.sharedtasks.ui.createproject.CreateProjectFragment;
-import com.jcr.sharedtasks.ui.list.TasksListFragment;
-import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment;
+import com.jcr.sharedtasks.ui.createproject.CreateProjectFragment
+import com.jcr.sharedtasks.ui.list.TasksListFragment
+import com.jcr.sharedtasks.ui.taskdetail.TaskDetailFragment
 
-import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 @Module
-public abstract class FragmentBuildersModule {
+abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
-    abstract TasksListFragment contributeListFragment();
+    internal abstract fun contributeListFragment(): TasksListFragment
 
     @ContributesAndroidInjector
-    abstract TaskDetailFragment contributeTaskDetailFragment();
+    internal abstract fun contributeTaskDetailFragment(): TaskDetailFragment
 
     @ContributesAndroidInjector
-    abstract CreateProjectFragment contributeCreateProjectFragment();
+    internal abstract fun contributeCreateProjectFragment(): CreateProjectFragment
 }
