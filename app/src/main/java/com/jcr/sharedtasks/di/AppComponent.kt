@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-package com.jcr.sharedtasks.di;
+package com.jcr.sharedtasks.di
 
-import android.app.Application;
+import android.app.Application
 
-import com.jcr.sharedtasks.SharedTasksApp;
+import com.jcr.sharedtasks.SharedTasksApp
 
-import javax.inject.Singleton;
+import javax.inject.Singleton
 
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.android.AndroidInjectionModule;
+import dagger.BindsInstance
+import dagger.Component
+import dagger.android.AndroidInjectionModule
 
 @Singleton
-@Component(modules = {
-        AndroidInjectionModule.class,
-        AppModule.class,
-        MainActivityModule.class,
-        ServiceBuilderModule.class
-})
-public interface AppComponent {
+@Component(modules = [
+    AndroidInjectionModule::class,
+    AppModule::class,
+    MainActivityModule::class,
+    ServiceBuilderModule::class]
+)
+interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        Builder application(Application application);
-        AppComponent build();
+        fun application(application: Application): Builder
+
+        fun build(): AppComponent
     }
-    void inject(SharedTasksApp sharedTasksApp);
+
+    fun inject(sharedTasksApp: SharedTasksApp)
 }
