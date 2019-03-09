@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun fillDrawer() {
-        mDrawerAdapter!!.clear()
+        mDrawerAdapter?.clear()
         for (reference in projectReferences!!) {
             mDrawerAdapter!!.add(reference.projectName)
         }

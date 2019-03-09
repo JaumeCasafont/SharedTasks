@@ -49,21 +49,19 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     // ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
     // Room
-    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha04'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha04'
 
     // Gson
     implementation "com.google.code.gson:gson:$gson_version"
@@ -75,7 +73,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     //Firebase
-    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-core:$firebase_core_version"
     implementation "com.google.firebase:firebase-database:$firebase_version"
     implementation "com.google.firebase:firebase-auth:$firebase_version"
 
