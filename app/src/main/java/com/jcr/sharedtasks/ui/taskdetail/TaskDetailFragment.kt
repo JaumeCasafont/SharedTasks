@@ -71,16 +71,16 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
         setupActionBar()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_add_edit_task, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_add_edit_task, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.save_task -> {
                 if (onSaveClick()) {
-                    activity!!.onBackPressed()
+                    requireActivity().onBackPressed()
                 }
                 true
             }
@@ -121,10 +121,10 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
     }
 
     fun onAssigneeClick() {
-        val sharedPreferences = activity!!.getSharedPreferences(
+        val sharedPreferences = requireActivity().getSharedPreferences(
                 "com.jcr.sharedtasks", Context.MODE_PRIVATE)
         val nextAssignee = taskDetailViewModel.updateAssignee(
-                sharedPreferences.getString("userName", " "))
+                sharedPreferences.getString("userName", " ")!!)
 
         binding.userName.text = nextAssignee ?: getString(R.string.assign_task)
     }
@@ -136,7 +136,7 @@ class TaskDetailFragment : Fragment(), Injectable, DatePickerDialog.OnDateSetLis
         else
             getString(R.string.task_no_priority)
 
-        val priorityIcon = ContextCompat.getDrawable(context!!, if (priority)
+        val priorityIcon = ContextCompat.getDrawable(requireContext(), if (priority)
             R.drawable.ic_flag_high_priority
         else
             R.drawable.ic_flag_no_priority)

@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         val sharedPreferences = getSharedPreferences("com.jcr.sharedtasks", Context.MODE_PRIVATE)
         if (sharedPreferences.contains("lastLoadedProject") && savedInstanceState == null) {
-            val projectUUID = sharedPreferences.getString("lastLoadedProject", "")
+            val projectUUID = sharedPreferences.getString("lastLoadedProject", "")!!
             navigationController.navigateToTasksList(projectUUID)
         }
     }
@@ -157,10 +157,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         })
         if (intent.data != null) {
             navigationController.navigateToTasksList(
-                    mViewModel.parseDeeplink(intent.data))
+                    mViewModel.parseDeeplink(intent.data!!))
             intent.data = null
         }
-        SyncDataUtil.startSyncData(this)
     }
 
     private fun fillDrawer() {

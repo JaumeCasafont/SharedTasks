@@ -80,8 +80,8 @@ class CreateProjectFragment : Fragment(), Injectable {
     }
 
     private fun checkInternetConnection(): Boolean {
-        val conMgr = activity!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return (conMgr.activeNetworkInfo != null && conMgr.activeNetworkInfo.isAvailable
-                && conMgr.activeNetworkInfo.isConnected)
+        val conMgr = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return (conMgr.activeNetworkInfo != null && conMgr.activeNetworkInfo!!.isAvailable
+                && conMgr.activeNetworkInfo!!.isConnected)
     }
 }
