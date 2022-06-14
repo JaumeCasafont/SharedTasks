@@ -104,7 +104,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     fun loadMyTasks(): LiveData<List<Task>> {
         return projectsDao.loadMyTasks(
-                sharedPreferences.getString("userName", ""))
+                sharedPreferences.getString("userName", "")!!)
     }
 
     fun loadTask(taskSID: String): LiveData<Task> {

@@ -76,7 +76,7 @@ open class TasksListFragment : Fragment(), Injectable {
 
         val args = arguments
         if (args!!.containsKey(PROJECT_UUID_KEY)) {
-            tasksListViewModel.setProjectUUID(args.getString(PROJECT_UUID_KEY))
+            tasksListViewModel.setProjectUUID(args.getString(PROJECT_UUID_KEY)!!)
         }
 
         binding.tasksListRv.adapter = tasksListAdapter
@@ -90,13 +90,13 @@ open class TasksListFragment : Fragment(), Injectable {
         TasksListWidgetService.startActionUpdateIngredientsList(context)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_task_list, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_task_list, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.add_people -> {
                 sendInvite()
                 true
