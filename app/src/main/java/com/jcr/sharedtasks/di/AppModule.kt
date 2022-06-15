@@ -38,7 +38,9 @@ class AppModule {
     @Singleton
     @Provides
     fun provideDb(app: Application): SharedTasksDb {
-        return Room.databaseBuilder(app, SharedTasksDb::class.java, "tasks.db").build()
+        return Room.databaseBuilder(app, SharedTasksDb::class.java, "tasks.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Singleton

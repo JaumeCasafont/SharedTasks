@@ -24,8 +24,11 @@ import javax.inject.Singleton
 @Singleton
 @OpenForTesting
 class ProjectsRepository @Inject
-constructor(private val appExecutors: AppExecutors, private val projectsDao: ProjectsDao,
-            private val sharedPreferences: SharedPreferences, private val apiClient: ApiClient) {
+constructor(
+    private val projectsDao: ProjectsDao,
+    private val sharedPreferences: SharedPreferences,
+    private val apiClient: ApiClient
+) {
 
     private val projectReferencesCache: MutableList<ProjectReference>
     private var currentReference: ProjectReference? = null
@@ -42,11 +45,10 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         get() {
             val userUid = sharedPreferences.getString("userUid", "")
             val dbSource = projectsDao.loadProjectsReferences()
-            val networkSource = apiClient.getProjectReferences(userUid!!).onEach { projectReference ->
-                projectsDao.insertProjectsReference(projectReference)
-            }.map {
-                listOf(it)
-            }
+            val networkSource =
+                apiClient.getProjectReferences(userUid!!).onEach { projectReferences ->
+                    projectsDao.insertProjectsReferences(projectReferences)
+                }
 
 //            result.addSource(dbSource) { result.setValue(it) }
 //
@@ -69,7 +71,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
     fun createProjectReference(projectReference: ProjectReference) {
         val userUid = sharedPreferences.getString("userUid", "")
 //        if (projectReferencePosition(projectReference) == -1) {
-            apiClient.postValue(userUid!!, projectReference)
+        apiClient.postValue(userUid!!, projectReference)
 //        }
     }
 
@@ -104,7 +106,8 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     fun loadMyTasks(): LiveData<List<Task>> {
         return projectsDao.loadMyTasks(
-                sharedPreferences.getString("userName", "")!!)
+            sharedPreferences.getString("userName", "")!!
+        )
     }
 
     fun loadTask(taskSID: String): LiveData<Task> {
@@ -146,8 +149,9 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     private fun uploadTask(task: Task) {
         apiClient.putValue(
-                task.taskProjectUUID + "/tasks/" + task.remotePosition.toString(),
-                task)
+            task.taskProjectUUID + "/tasks/" + task.remotePosition.toString(),
+            task
+        )
     }
 
 //    private fun saveInCache(projectReference: ProjectReference?): ProjectReference? {

@@ -10,7 +10,7 @@ import com.jcr.sharedtasks.model.Task
         entities = [
             Task::class,
             ProjectReference::class],
-        version = 1,
+        version = 2,
         exportSchema = false)
 abstract class SharedTasksDb : RoomDatabase() {
 

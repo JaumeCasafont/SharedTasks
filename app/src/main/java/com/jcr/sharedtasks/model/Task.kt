@@ -10,13 +10,7 @@ import androidx.room.PrimaryKey
         indices = [
             Index("taskProjectUUID")
         ],
-        primaryKeys = ["taskSID", "taskProjectUUID"],
-        foreignKeys = [ForeignKey(
-                entity = ProjectReference::class,
-                parentColumns = ["projectUUID"],
-                childColumns = ["taskProjectUUID"],
-                onUpdate = ForeignKey.CASCADE,
-                deferred = true)]
+        primaryKeys = ["taskSID", "taskProjectUUID"]
 )
 data class Task(
         var taskProjectUUID: String,

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProjectsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProjectsReference(projectReference: ProjectReference)
+    suspend fun insertProjectsReferences(projectReferences: List<ProjectReference>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTasks(tasks: List<Task>)

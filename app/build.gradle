@@ -83,6 +83,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$firebase_core_version"
     implementation "com.google.firebase:firebase-database:$firebase_database_version"
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
+    implementation "com.google.android.gms:play-services-auth:20.2.0"
 
     // FirebaseJobDispatcher
     implementation "com.firebase:firebase-jobdispatcher:$firebase_jobdispatcher_version"
