@@ -8,34 +8,35 @@ import androidx.room.Query
 
 import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.model.Task
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class ProjectsDao {
+interface ProjectsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertProjectsReference(projectReference: ProjectReference)
+    suspend fun insertProjectsReference(projectReference: ProjectReference)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertTasks(tasks: List<Task>)
+    suspend fun insertTasks(tasks: List<Task>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertTask(task: Task)
+    suspend fun insertTask(task: Task)
 
     @Query("SELECT * FROM ProjectReference")
-    abstract fun loadProjectsReferences(): LiveData<List<ProjectReference>>
+    fun loadProjectsReferences(): Flow<List<ProjectReference>>
 
     @Query("SELECT * FROM ProjectReference " + "WHERE projectUUID = :projectUUID")
-    abstract fun loadProjectReferenceById(projectUUID: String): LiveData<ProjectReference>
+    fun loadProjectReferenceById(projectUUID: String): Flow<ProjectReference>
 
     @Query("SELECT * FROM task " + "WHERE taskProjectUUID = :projectUUID ")
-    abstract fun loadTasks(projectUUID: String): LiveData<List<Task>>
+    fun loadTasks(projectUUID: String): Flow<List<Task>>
 
     @Query("SELECT * FROM task " + "WHERE assignee = :assignee AND state < 2")
-    abstract fun loadMyTasks(assignee: String): LiveData<List<Task>>
+    fun loadMyTasks(assignee: String): LiveData<List<Task>>
 
     @Query("SELECT * FROM task " + "WHERE taskSID = :taskSID")
-    abstract fun loadTask(taskSID: String): LiveData<Task>
+    fun loadTask(taskSID: String): LiveData<Task>
 
     @Query("SELECT * FROM task " + "WHERE NOT isUploaded")
-    abstract fun loadLocalTasks(): LiveData<List<Task>>
+    fun loadLocalTasks(): LiveData<List<Task>>
 }

@@ -1,15 +1,13 @@
 package com.jcr.sharedtasks.ui.taskdetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.repository.ProjectsRepository
 import com.jcr.sharedtasks.testing.OpenForTesting
 import com.jcr.sharedtasks.util.AbsentLiveData
 import com.jcr.sharedtasks.util.Objects
 import com.jcr.sharedtasks.util.TimeUtils
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -92,6 +90,9 @@ constructor(private val repository: ProjectsRepository) : ViewModel() {
     fun saveTask(title: String, description: String) {
         taskToUpload?.title = title
         taskToUpload?.description = description
-        repository.sendTask(taskToUpload!!)
+
+        viewModelScope.launch {
+            repository.sendTask(taskToUpload!!)
+        }
     }
 }

@@ -24,6 +24,7 @@ import com.jcr.sharedtasks.R.id.leftDrawer
 import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.ui.common.NavigationController
 import com.jcr.sharedtasks.util.SyncDataUtil
+import com.jcr.sharedtasks.util.collectOnStarted
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
@@ -151,10 +152,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun onSignedInInitialize(user: FirebaseUser) {
         mViewModel.onSignedInitialize(user)
-        mViewModel.projectUUIDs.observe(this, Observer {
+        collectOnStarted(mViewModel.projectUUIDs) {
             projectReferences = it
             fillDrawer()
-        })
+        }
         if (intent.data != null) {
             navigationController.navigateToTasksList(
                     mViewModel.parseDeeplink(intent.data!!))

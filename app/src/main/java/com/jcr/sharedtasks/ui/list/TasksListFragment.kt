@@ -19,6 +19,7 @@ import com.jcr.sharedtasks.databinding.TasksListFragmentBinding
 import com.jcr.sharedtasks.di.Injectable
 import com.jcr.sharedtasks.ui.common.NavigationController
 import com.jcr.sharedtasks.util.autoCleared
+import com.jcr.sharedtasks.util.collectOnStarted
 import com.jcr.sharedtasks.widget.TasksListWidgetService
 import javax.inject.Inject
 
@@ -87,7 +88,7 @@ open class TasksListFragment : Fragment(), Injectable {
     }
 
     open fun initWidget() {
-        TasksListWidgetService.startActionUpdateIngredientsList(context)
+//        TasksListWidgetService.startActionUpdateIngredientsList(context)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -132,9 +133,9 @@ open class TasksListFragment : Fragment(), Injectable {
     }
 
     private fun fillViews() {
-        tasksListViewModel.projectReference.observe(this, Observer {
+        collectOnStarted(tasksListViewModel.projectReference) {
             setupActionBar(it?.projectName)
-        })
+        }
 
         binding.addTask.setOnClickListener { v -> onNewTaskClick() }
         initRecyclerView()
@@ -146,14 +147,12 @@ open class TasksListFragment : Fragment(), Injectable {
     }
 
     private fun initRecyclerView() {
-        tasksListViewModel.tasks.observe(this, Observer { tasks ->
-            if (tasks != null) {
-                adapter.submitList(tasks)
-            }
-        })
+        collectOnStarted(tasksListViewModel.tasks) { tasks ->
+            adapter.submitList(tasks)
+        }
     }
 
-    fun onNewTaskClick() {
+    private fun onNewTaskClick() {
         navigationController.navigateToTaskDetail(null)
     }
 

@@ -20,7 +20,7 @@ class SyncDataFirebaseJobService : JobService() {
         repository.loadLocalTasks().observeForever { tasks ->
             if (tasks != null && !tasks.isEmpty()) {
                 for (task in tasks) {
-                    repository.sendTask(task)
+                    //repository.sendTask(task) // TODO migrate to work manager
                 }
             }
         }

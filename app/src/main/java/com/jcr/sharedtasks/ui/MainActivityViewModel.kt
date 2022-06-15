@@ -1,11 +1,8 @@
 package com.jcr.sharedtasks.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.*
 
 import com.google.firebase.auth.FirebaseUser
 import com.jcr.sharedtasks.model.Project
@@ -15,6 +12,7 @@ import com.jcr.sharedtasks.repository.ProjectsRepository
 import com.jcr.sharedtasks.repository.SignInRepository
 import com.jcr.sharedtasks.util.AbsentLiveData
 import com.jcr.sharedtasks.util.DeepLinkUtils
+import kotlinx.coroutines.flow.*
 
 import java.util.ArrayList
 import java.util.UUID
@@ -25,15 +23,16 @@ class MainActivityViewModel @Inject
 constructor(private val signInRepository: SignInRepository, private val projectsRepository: ProjectsRepository) : ViewModel() {
 
     @VisibleForTesting
-    private val logged = MutableLiveData<Boolean>()
-    val projectUUIDs: LiveData<List<ProjectReference>> = Transformations
-            .switchMap(logged) { isLogged ->
-                if (isLogged) {
-                    projectsRepository.projectsReferences
-                } else {
-                    AbsentLiveData.create()
-                }
-            }
+    private val logged = MutableStateFlow<Boolean?>(null)
+    val projectUUIDs: StateFlow<List<ProjectReference>> = logged.transform { logged ->
+        if (logged == true) {
+            emitAll(projectsRepository.projectsReferences)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
+    )
 
     val isUserLogged: Boolean
         get() = logged.value != null && logged.value!!

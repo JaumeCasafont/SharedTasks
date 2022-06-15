@@ -13,6 +13,8 @@ import com.jcr.sharedtasks.model.Project
 import com.jcr.sharedtasks.model.ProjectReference
 import com.jcr.sharedtasks.model.Task
 import com.jcr.sharedtasks.testing.OpenForTesting
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 
 import java.util.ArrayList
 
@@ -35,24 +37,28 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
     val currentProjectName: String
         get() = if (currentReference == null) "" else currentReference!!.projectName
 
-    val projectsReferences: LiveData<List<ProjectReference>>
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val projectsReferences: Flow<List<ProjectReference>>
         get() {
             val userUid = sharedPreferences.getString("userUid", "")
-            val result = MediatorLiveData<List<ProjectReference>>()
             val dbSource = projectsDao.loadProjectsReferences()
-            val networkSource = apiClient.getProjectReferences(userUid!!)
-
-            result.addSource(dbSource) { result.setValue(it) }
-
-            result.addSource(networkSource) { dataSnapshot ->
-                val projectReference = saveInCache(dataSnapshot)
-                if (projectReference != null) {
-                    result.value = projectReferencesCache
-                    appExecutors.diskIO().execute { projectsDao.insertProjectsReference(projectReference) }
-                }
+            val networkSource = apiClient.getProjectReferences(userUid!!).onEach { projectReference ->
+                projectsDao.insertProjectsReference(projectReference)
+            }.map {
+                listOf(it)
             }
 
-            return result
+//            result.addSource(dbSource) { result.setValue(it) }
+//
+//            result.addSource(networkSource) { dataSnapshot ->
+//                val projectReference = saveInCache(dataSnapshot)
+//                if (projectReference != null) {
+//                    result.value = projectReferencesCache
+//                    appExecutors.diskIO().execute {  }
+//                }
+//            }
+
+            return merge(dbSource, networkSource).distinctUntilChanged()
         }
 
     init {
@@ -62,9 +68,9 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
 
     fun createProjectReference(projectReference: ProjectReference) {
         val userUid = sharedPreferences.getString("userUid", "")
-        if (projectReferencePosition(projectReference) == -1) {
+//        if (projectReferencePosition(projectReference) == -1) {
             apiClient.postValue(userUid!!, projectReference)
-        }
+//        }
     }
 
     fun createProject(project: Project) {
@@ -74,32 +80,26 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         createProjectReference(projectReference)
     }
 
-    fun getProjectReferenceById(projectUUID: String): LiveData<ProjectReference> {
-        val result = MediatorLiveData<ProjectReference>()
-        result.addSource(projectsDao.loadProjectReferenceById(projectUUID)) { projectReference ->
-            currentReference = projectReference
-            result.setValue(currentReference)
-        }
-        return result
+    fun getProjectReferenceById(projectUUID: String): Flow<ProjectReference> {
+//        val result = MediatorLiveData<ProjectReference>()
+//        result.addSource() { projectReference ->
+//            currentReference = projectReference
+//            result.setValue(currentReference)
+//        }
+        return projectsDao.loadProjectReferenceById(projectUUID)
     }
 
-    fun loadTasks(projectUUID: String): LiveData<List<Task>> {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun loadTasks(projectUUID: String): Flow<List<Task>> {
         sharedPreferences.edit().putString("lastLoadedProject", projectUUID).apply()
-        val result = MediatorLiveData<List<Task>>()
         val dbSource = projectsDao.loadTasks(projectUUID)
-        val networkSource = apiClient.getProject(projectUUID)
-
-        result.addSource(dbSource) { result.setValue(it) }
-
-        result.addSource(networkSource) { project ->
-            val tasks = getProjectTasks(project)
-            if (tasks != null) {
-                result.value = tasks
-                appExecutors.diskIO().execute { projectsDao.insertTasks(tasks) }
-            }
+        val networkSource = apiClient.getProject(projectUUID).map { project ->
+            project.tasks ?: emptyList()
+        }.onEach {
+            projectsDao.insertTasks(it)
         }
 
-        return result
+        return merge(dbSource, networkSource).distinctUntilChanged()
     }
 
     fun loadMyTasks(): LiveData<List<Task>> {
@@ -111,7 +111,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         return projectsDao.loadTask(taskSID)
     }
 
-    fun updateTaskState(task: Task) {
+    suspend fun updateTaskState(task: Task) {
         val updatedStatusTask = Task(task)
         updatedStatusTask.state = updatedStatusTask.state + 1
         if (updatedStatusTask.state <= 2) {
@@ -119,7 +119,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         }
     }
 
-    fun updateTaskAssignee(task: Task) {
+    suspend fun updateTaskAssignee(task: Task) {
         val updatedAssigneeTask = Task(task)
         val assignee = sharedPreferences.getString("userName", " ")
         if (assignee != updatedAssigneeTask.assignee) {
@@ -128,7 +128,7 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         }
     }
 
-    fun sendTask(task: Task) {
+    suspend fun sendTask(task: Task) {
         if (!task.isUploaded) {
             task.remotePosition = lastRemotePosition + 1
         }
@@ -140,8 +140,8 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
         return projectsDao.loadLocalTasks()
     }
 
-    private fun saveTask(task: Task) {
-        appExecutors.diskIO().execute { projectsDao.insertTask(task) }
+    private suspend fun saveTask(task: Task) {
+        projectsDao.insertTask(task)
     }
 
     private fun uploadTask(task: Task) {
@@ -150,28 +150,28 @@ constructor(private val appExecutors: AppExecutors, private val projectsDao: Pro
                 task)
     }
 
-    private fun saveInCache(projectReference: ProjectReference?): ProjectReference? {
-        if (projectReference?.projectUUID != null) {
-            val position = projectReferencePosition(projectReference)
-            if (position == -1) {
-                projectReferencesCache.add(projectReference)
-            } else {
-                projectReferencesCache[position] = projectReference
-            }
-        }
-
-        return projectReference
-    }
-
-    private fun projectReferencePosition(projectReference: ProjectReference): Int {
-        if (projectReferencesCache.size == 0) return -1
-        for (i in projectReferencesCache.indices) {
-            if (projectReferencesCache[i].projectUUID == projectReference.projectUUID) {
-                return i
-            }
-        }
-        return -1
-    }
+//    private fun saveInCache(projectReference: ProjectReference?): ProjectReference? {
+//        if (projectReference?.projectUUID != null) {
+//            val position = projectReferencePosition(projectReference)
+//            if (position == -1) {
+//                projectReferencesCache.add(projectReference)
+//            } else {
+//                projectReferencesCache[position] = projectReference
+//            }
+//        }
+//
+//        return projectReference
+//    }
+//
+//    private fun projectReferencePosition(projectReference: ProjectReference): Int {
+//        if (projectReferencesCache.size == 0) return -1
+//        for (i in projectReferencesCache.indices) {
+//            if (projectReferencesCache[i].projectUUID == projectReference.projectUUID) {
+//                return i
+//            }
+//        }
+//        return -1
+//    }
 
     private fun getProjectTasks(project: Project?): List<Task>? {
         if (project == null) return null
